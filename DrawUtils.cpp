@@ -83,7 +83,15 @@ GLuint glTexImageTGAFile(const char* filename)
 	return tex;
 }
 
-/* Draw the sprite */
+/* Draw the sprite using default values for s and t texture coordinates
+*  Assumes the full texture will be drawn
+ * The lower left of a texture is (0.0, 0.0) and upper right is (1.0, 1.0)
+ * Horizontal axis is s, and vertical axis is t
+ * param tex is an openGL texture mapped to a quad
+ * param x is position to draw sprite in the game world
+ * param y is position to draw sprite in the game world
+ * param w is frame width - width of part of texture to be drawn
+ * param h is frame height - height of part of texture to be drawn*/
 void glDrawSprite(GLuint tex, int x, int y, int w, int h)
 {
 	glBindTexture(GL_TEXTURE_2D, tex);
@@ -106,22 +114,41 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
 	glEnd();
 }
 
-void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float u, float v){
+/* Draw the sprite using only part of the texture.
+ * The lower left of a texture is (0.0, 0.0) and upper right is (1.0, 1.0)
+ * Horizontal axis is s, and vertical axis is t
+ * param tex is an openGL texture mapped to a quad
+ * param x is position to draw sprite in the game world
+ * param y is position to draw sprite in the game world
+ * param w is frame width - width of part of texture to be drawn
+ * param h is frame height - height of part of texture to be drawn
+ * param s1 is left texture coordinate
+ * param s2 is right texture coordinate
+ * param t1 is lower texture coordinate
+ * param t2 is upper texture coordinate
+ * 
+  A* * * * * *B
+   *         *
+   *         *
+   *         *
+  D* * * * * *C
+ */
+void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float s1, float s2){
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBegin(GL_QUADS);
 	{
 		glColor3ub(255, 255, 255);
 
-		glTexCoord2f(u, 1.0f);  // A
+		glTexCoord2f(s1, 1.0f);  // A
 		glVertex2i(x, y);
 
-		glTexCoord2f(v, 1.0f);  // B
+		glTexCoord2f(s2, 1.0f);  // B
 		glVertex2i(x + w, y);
 
-		glTexCoord2f(v, 0.0f); // C
+		glTexCoord2f(s2, 0.0f); // C
 		glVertex2i(x + w, y + h);
 
-		glTexCoord2f(u, 0.0f); // D
+		glTexCoord2f(s1, 0.0f); // D
 		glVertex2i(x, y + h);
 	}
 	glEnd();
