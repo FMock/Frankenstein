@@ -46,9 +46,11 @@ void Player::draw(){
 		int cell_width = 128;
 		int current_frame = 9;
 		float cell_division = 1.0 / 12.0;
-		float u = current_frame * cell_division;
-		float v = (current_frame * cell_division) + cell_division;
-		glDrawSpriteSheet(image, int(x), int(y), cell_width, height, u, v);
+		float s1 = current_frame * cell_division; // Calculate left horizontal texture coordinate
+		float s2 = (current_frame * cell_division) + cell_division; // Calculate right horizontal texture coordinate
+		float t1 = 0.0; // Calculate lower vertical texture coordinate
+		float t2 = 1.0; // Calculate upper vertical texture coordinate
+		glDrawSpriteSheet(image, int(x), int(y), cell_width, height, s1, s2, t1, t2);
 	}
 	else{
 		rotateAngle += 90.0;

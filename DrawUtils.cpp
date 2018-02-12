@@ -133,22 +133,22 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
    *         *
   D* * * * * *C
  */
-void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float s1, float s2){
+void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2){
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBegin(GL_QUADS);
 	{
 		glColor3ub(255, 255, 255);
 
-		glTexCoord2f(s1, 1.0f);  // A
+		glTexCoord2f(s1, t2);  // A
 		glVertex2i(x, y);
 
-		glTexCoord2f(s2, 1.0f);  // B
+		glTexCoord2f(s2, t2);  // B
 		glVertex2i(x + w, y);
 
-		glTexCoord2f(s2, 0.0f); // C
+		glTexCoord2f(s2, t1); // C
 		glVertex2i(x + w, y + h);
 
-		glTexCoord2f(s1, 0.0f); // D
+		glTexCoord2f(s1, t1); // D
 		glVertex2i(x, y + h);
 	}
 	glEnd();
