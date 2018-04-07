@@ -1,17 +1,20 @@
-#pragma once
 #ifndef OBSERVER_H
 #define OBSERVER_H
 
-class Player;
+class AnimatedSprite;
 
-/* Observer is a pure virtual class that other game classes can implement
- * so that they can be notified of player information.
- */
 class Observer{
 public:
-	Observer(void);
-	virtual void notify(Player* myPlayer)=0;
-	~Observer(void);
+	inline Observer(void){}
+	template<typename T> void notify(T*);
+	inline ~Observer(void){}
+	virtual void respondToObserved(AnimatedSprite*)=0;
 };
+
+/*Observer receives notification from the observed*/
+template<typename T> inline void Observer::notify(T* type){
+
+	respondToObserved(type);
+}
 
 #endif

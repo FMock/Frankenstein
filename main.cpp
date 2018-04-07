@@ -9,13 +9,19 @@
 #include<vector>
 #include<time.h>
 #include"Player.h"
+#include"AnimatedSprite.h"
+#include"animation.h"
+#include"AnimationDef.h"
 #include"Orc.h"
+#include"StoreClerk.h"
+#include<map>
+#include"Skeleton.h"
 
 /*  main.cpp
-	Project Name - Frankenstein - A C++ game engine for simple 2D games
+	Project Name - SpriteVectorProject
 	Program Name - main.cpp
 	Author - Frank Mock
-	Project Start Date - 2/6/2018 */
+	Project Start Date - 1/27/2018 */
 
 // Set this to true to make the game loop exit.
 char shouldExit = 0;
@@ -37,17 +43,44 @@ float msPerFrame = 0.0f;
 unsigned int seconds = 0;
 unsigned int fps = 0;
 
-// List to hold the Orcs
-std::vector<Orc *> orcs = std::vector<Orc *>();
 
 // Sprite Objects
 Player player;
-Orc orc;
+StoreClerk storeClerk;
+
+// Player Setup
+AnimatedSprite player2;
+std::vector<Animation> playerAnimations;
+Animation playerWalkLeft;
+Animation playerWalkRight;
+Animation playerWalkUp;
+Animation playerWalkDown;
+Animation playerStandRight;
+Animation playerStandLeft;
+AnimationDef animDef;
+std::map<std::string, int> animationMap;
+// End Player Setup
+
+// Skeleton Setup
+std::vector<Skeleton*> skeletons = std::vector<Skeleton*>();
+const int NUMBER_OF_SKELETONS = 1;
+AnimatedSprite skeleton;
+std::vector<Animation> skeletonAnimations;
+Animation skeletonWalkLeft;
+Animation skeletonWalkRight;
+AnimationDef animDefSkeleton;
+std::map<std::string, int> animationMapSkeleton;
+// End Skeleton Setup
 
 // Function Prototyes
 void processInputs(float);
 void update(float);
 void draw();
+
+/* The following enum represent a player animation
+ * Be sure that these are entered in the same order that the animations are entered in vector
+ * This enum is used mainly for better readability*/
+enum directions{LEFT, RIGHT, UP, DOWN, STOPPED_FACE_RIGHT, STOPPED_FACE_LEFT};
 
 int main(void)
 {
@@ -101,15 +134,57 @@ int main(void)
 
 	// Create the player and enemy objects (GL image, xPosition, yPosition, width, height)
 	//player = Player(glTexImageTGAFile("images/magikarp.tga"), 300.0, 64.0, 44, 57);
-	player = Player(glTexImageTGAFile("images/run_cycle.tga"), 300.0, 64.0, 1536, 128);
+	//player = Player(glTexImageTGAFile("images/run_cycle.tga"), 300.0, 64.0, 1536, 128);
 
-	// Dynamically create orc enemies and place in vector
-	for(int i = 0; i < 4; i++){
-		float xpos = float(rand() % 100 + 50);
+
+	/*IN THIS GAME, THE PLAYERS FACING DIRECTION IS REPRESENTED AS AN INTEGER*/
+	animationMap["walking_left"] = 0;
+	playerWalkLeft = Animation(glTexImageTGAFile("images/dwarf_walk_left.tga"), 4, 1, 0, "walking_left", animationMap["walking_left"]); //(anim images, frames in animation, rows in animation, start row, name, direction)
+	playerAnimations.push_back(playerWalkLeft);
+
+	animationMap["walking_right"] = 1;
+	playerWalkRight = Animation(glTexImageTGAFile("images/dwarf_walk_right.tga"), 4, 1, 0, "walking_right", animationMap["walking_right"]);
+	playerAnimations.push_back(playerWalkRight);
+
+	animationMap["walking_up"] = 2;
+	playerWalkUp = Animation(glTexImageTGAFile("images/dwarf_walk_up.tga"), 4, 1, 0, "walking_up", animationMap["walking_up"]);
+	playerAnimations.push_back(playerWalkUp);
+	
+	animationMap["walking_down"] = 3;
+	playerWalkDown = Animation(glTexImageTGAFile("images/dwarf_walk_down.tga"), 4, 1, 0, "walking_down", animationMap["walking_down"]);
+	playerAnimations.push_back(playerWalkDown);
+
+	animationMap["stopped_facing_right"] = 4;
+	playerStandRight = Animation(glTexImageTGAFile("images/dwarf_stand_right.tga"), 1, 1, 0, "stopped_facing_right", animationMap["walking_right"]);
+	playerAnimations.push_back(playerStandRight);
+
+	animationMap["stopped_facing_left"] = 5;
+	playerStandLeft = Animation(glTexImageTGAFile("images/dwarf_stand_left.tga"), 1, 1, 0, "stopped_facing_left", animationMap["walking_left"]);
+	playerAnimations.push_back(playerStandLeft);
+
+	animDef = AnimationDef(1,64,104, playerAnimations, animationMap);
+	player2 = AnimatedSprite(300.0, 64.0, 64, 104, animDef, "player"); //xPos, yPos, player_width, player_height
+
+	storeClerk = StoreClerk(glTexImageTGAFile("images/magikarp.tga"), 650, 300, 44, 57);
+	player2.registerObserver(&storeClerk);
+
+	// ---- Skeleton Creation  -----------------------------------------//
+	animationMapSkeleton["walking_left"] = 0;
+	skeletonWalkLeft = Animation(glTexImageTGAFile("images/skeleton_walking_left.tga"), 3, 1, 0, "walking_left", animationMapSkeleton["walking_left"]);
+	skeletonAnimations.push_back(skeletonWalkLeft);
+	animationMapSkeleton["walking_right"] = 1;
+	skeletonWalkRight = Animation(glTexImageTGAFile("images/skeleton_walking_right.tga"), 3, 1, 0, "walking_right", animationMapSkeleton["walking_right"]);
+	skeletonAnimations.push_back(skeletonWalkRight);
+	animDefSkeleton = AnimationDef(1, 27, 48, skeletonAnimations, animationMapSkeleton);
+
+	for(int i = 0; i < NUMBER_OF_SKELETONS; i++){
+		float xpos = float(rand() % 150 + 50);
 		float ypos = float(rand() % 400 + 50);
-		orcs.push_back(new Orc(glTexImageTGAFile("images/skeleton.tga"), xpos, ypos, 27, 48));
-		player.registerObserver(orcs.at(i)); // register the Orc as an observer of the player
+		skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, animDefSkeleton, "skeleton"));
+		skeletons.at(i)->number = i + 1;
+		player2.registerObserver(skeletons.at(i)); // register the skeleton as an observer of the player
 	}
+
 
 
 	//********** GAME LOOP *************************************************************
@@ -151,9 +226,15 @@ int main(void)
 		//printf("Current Key: %s\n", KeyInfo::getCurrentKey().c_str());
 		//printf("Previous Key: %s\n", KeyInfo::getPrevKey().c_str());
 		//printf("X = %f\n", player.getX());
-		printf("%s\n", player.to_string().c_str());
+		//printf("%s\n", player2.to_string().c_str());
 		//printf("kbState[SDL_SCANCODE_LEFT] = %i\n", kbState[SDL_SCANCODE_LEFT]);
 		//printf("kbPrevState[SDL_SCANCODE_LEFT] = %i\n", kbPrevState[SDL_SCANCODE_LEFT]);
+		/*
+		for(int i = 0; i < NUMBER_OF_SKELETONS; i++){
+			printf("%s\n", skeletons.at(i)->to_string().c_str());
+		}
+		*/
+
 		
 		// Present the most recent frame.
 		SDL_GL_SwapWindow(window);
@@ -184,13 +265,15 @@ void processInputs(float dt){
 	else if(kbState[SDL_SCANCODE_RETURN] && !kbPrevState[SDL_SCANCODE_RETURN]){
 		noKeyPressTime = 0;
 		//printf("RETURN\n");
-		player.getRotate() ? player.setRotate(false) : player.setRotate(true);
+		//player.getRotate() ? player.setRotate(false) : player.setRotate(true);
 	}
-	else if(kbState[SDL_SCANCODE_LEFT] && !kbPrevState[SDL_SCANCODE_LEFT]){
+	else if(kbState[SDL_SCANCODE_LEFT] && !kbPrevState[SDL_SCANCODE_LEFT]){ // LEFT ARROW KEY PRESSED
 		noKeyPressTime = 0;
-		player.moveLeft();
+		if(player2.getCurrentAnimation() != player2.animationDef.animationMap["walking_left"])
+			player2.changeAnimation(player2.animationDef.animationMap["walking_left"]);
+		player2.moveLeft();
 	}// If no directional keys are being pressed, stop the player's movement
-	else if(!kbState[SDL_SCANCODE_LEFT] && 
+	else if(!kbState[SDL_SCANCODE_LEFT] &&									// NO DIRECTIONAL KEYS PRESSED
 			!kbPrevState[SDL_SCANCODE_LEFT] &&
 			!kbState[SDL_SCANCODE_RIGHT] && 
 			!kbPrevState[SDL_SCANCODE_RIGHT] && 
@@ -199,19 +282,30 @@ void processInputs(float dt){
 			!kbState[SDL_SCANCODE_DOWN] &&
 			!kbPrevState[SDL_SCANCODE_DOWN]){
 		noKeyPressTime = 0;
-		player.stop();
+		if(player2.getFacingDirection() == player2.RIGHT)
+			player2.changeAnimation(player2.animationDef.animationMap["stopped_facing_right"]);
+		else if(player2.getFacingDirection() == player2.LEFT)
+			player2.changeAnimation(player2.animationDef.animationMap["stopped_facing_left"]);
+		player2.stop();
 	}
-	else if(kbState[SDL_SCANCODE_RIGHT] && !kbPrevState[SDL_SCANCODE_RIGHT]){
+	else if(kbState[SDL_SCANCODE_RIGHT] && !kbPrevState[SDL_SCANCODE_RIGHT]){  // RIGHT ARROW KEY PRESSED
 		noKeyPressTime = 0;
-		player.moveRight();
+		if(player2.getCurrentAnimation() != player2.animationDef.animationMap["walking_right"])
+			player2.changeAnimation(player2.animationDef.animationMap["walking_right"]);
+
+		player2.moveRight();
 	}
-	else if(kbState[SDL_SCANCODE_UP] && !kbPrevState[SDL_SCANCODE_UP]){
+	else if(kbState[SDL_SCANCODE_UP] && !kbPrevState[SDL_SCANCODE_UP]){  // UP ARROW KEY PRESSED
 		noKeyPressTime = 0;
-		player.moveUp();
+		if(player2.getCurrentAnimation() != player2.animationDef.animationMap["walking_up"])
+			player2.changeAnimation(player2.animationDef.animationMap["walking_up"]);
+		player2.moveUp();
 	}
-	else if(kbState[SDL_SCANCODE_DOWN] && !kbPrevState[SDL_SCANCODE_DOWN]){
+	else if(kbState[SDL_SCANCODE_DOWN] && !kbPrevState[SDL_SCANCODE_DOWN]){  // DOWN ARROW KEY PRESSED
 		noKeyPressTime = 0;
-		player.moveDown();
+		if(player2.getCurrentAnimation() != player2.animationDef.animationMap["walking_down"])
+			player2.changeAnimation(player2.animationDef.animationMap["walking_down"]);
+		player2.moveDown();
 	}
 	else if(kbState[SDL_SCANCODE_SPACE] && !kbPrevState[SDL_SCANCODE_SPACE]){
 		noKeyPressTime = 0;
@@ -224,17 +318,25 @@ void processInputs(float dt){
 }
 
 void update(float dt){
-	player.update(dt);
+	player2.update(dt);
+
+	
+	for(int i = 0; i < NUMBER_OF_SKELETONS; i++){
+		skeletons.at(i)->update(dt);
+	}
+	
 	//fmod_sys->update(); // If you don't update the sound will play once
 }
 
 // Render graphics
 void draw(){
-	player.draw();
+	player2.draw();
 
-	for(int i = 0; i < 4; i++){
-		orcs.at(i)->draw();
+	for(int i = 0; i < NUMBER_OF_SKELETONS; i++){
+		skeletons.at(i)->draw();
 	}
+
+	storeClerk.draw();
 }
 
 /*

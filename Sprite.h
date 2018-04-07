@@ -2,7 +2,11 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-// Abstract base class for all sprites in game
+#include<GL/glew.h>
+#include"AABB.h"
+#include"Vector2D.h"
+#include<cmath>
+
 
 class Sprite{
 public:
@@ -15,6 +19,9 @@ public:
 	float getY()const;
 	void setX(float);
 	void setY(float);
+	AABB box;
+	AABB& Sprite::getBox();
+	bool AABBIntersect(AABB& box2)const;
 protected:
 	float x;
 	float change_x;
@@ -22,6 +29,7 @@ protected:
 	float change_y;
 	int width;
 	int height;
+	Vector2D position;
 };
 
 #endif

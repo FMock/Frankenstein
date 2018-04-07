@@ -114,7 +114,7 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
 	glEnd();
 }
 
-/* Draw the sprite using only part of the texture.
+/* Draw a frame from a OpenGL texture.
  * The lower left of a texture is (0.0, 0.0) and upper right is (1.0, 1.0)
  * Horizontal axis is s, and vertical axis is t
  * param tex is an openGL texture mapped to a quad
@@ -133,7 +133,7 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
    *         *
   D* * * * * *C
  */
-void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2){
+void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2){
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBegin(GL_QUADS);
 	{

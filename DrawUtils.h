@@ -14,7 +14,7 @@
 
 	/* This function is used when only part of a texture will be drawn. You must 
 	 * pass the (s,t) texture coordinates */
-	void glDrawSpriteSheet(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2);
+	void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2);
 
 	void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle);
 	
