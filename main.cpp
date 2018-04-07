@@ -8,7 +8,6 @@
 #include"DrawUtils.h"
 #include<vector>
 #include<time.h>
-#include"Player.h"
 #include"AnimatedSprite.h"
 #include"animation.h"
 #include"AnimationDef.h"
@@ -18,7 +17,7 @@
 #include"Skeleton.h"
 
 /*  main.cpp
-	Project Name - SpriteVectorProject
+	Project Name - Frankenstein
 	Program Name - main.cpp
 	Author - Frank Mock
 	Project Start Date - 1/27/2018 */
