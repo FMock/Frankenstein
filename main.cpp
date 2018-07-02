@@ -8,6 +8,7 @@
 #include"DrawUtils.h"
 #include<vector>
 #include<time.h>
+#include"Player.h"
 #include"AnimatedSprite.h"
 #include"animation.h"
 #include"AnimationDef.h"
@@ -15,12 +16,15 @@
 #include"StoreClerk.h"
 #include<map>
 #include"Skeleton.h"
+#include"TextString.h"
 
 /*  main.cpp
-	Project Name - Frankenstein
+	Project Name - SpriteVectorProject
 	Program Name - main.cpp
 	Author - Frank Mock
-	Project Start Date - 1/27/2018 */
+	Start Date  - 1/27/2018 
+	Last update - 7/02/2018
+*/
 
 // Set this to true to make the game loop exit.
 char shouldExit = 0;
@@ -46,6 +50,8 @@ unsigned int fps = 0;
 // Sprite Objects
 Player player;
 StoreClerk storeClerk;
+// text object
+TextString textStr;
 
 // Player Setup
 AnimatedSprite player2;
@@ -184,6 +190,8 @@ int main(void)
 		player2.registerObserver(skeletons.at(i)); // register the skeleton as an observer of the player
 	}
 
+	// Test to draw text
+	textStr = TextString("Frankenstein!", glTexImageTGAFile("images/game_font.tga"), 496, 216, 31, 36, 150, 150);
 
 
 	//********** GAME LOOP *************************************************************
@@ -336,6 +344,8 @@ void draw(){
 	}
 
 	storeClerk.draw();
+
+	textStr.drawText();
 }
 
 /*

@@ -6,18 +6,20 @@
 #include<stdio.h>
 #include"DrawUtils.h"
 #include"Sprite.h"
-#include"Player.h"
 #include"Observer.h"
+#include"AnimatedSprite.h"
 
 class Orc : public Observer, public Sprite{
 public:
 	Orc();
 	Orc(GLuint, float, float, int, int);
-	void notify(Player*);
+	int number;
 	void draw();
 	void update(float);
-private:
 	GLuint image;
+	virtual void respondToObserved(AnimatedSprite*);
+protected:
+	inline void observerResponse(){ printf("Attack!\n"); }
 };
 
 #endif

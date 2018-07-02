@@ -154,6 +154,37 @@ void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, flo
 	glEnd();
 }
 
+/* drawRasterText - Draws a text string at (x, y) in the game world. tex must be an font image
+ * param tex - the font image
+ * param x - x position in the game world to draw the string
+ * param y - y position in the game world to draw the string
+ * param w is frame width - width of part of texture to be drawn
+ * param h is frame height - height of part of texture to be drawn
+ */
+void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]){
+	float s1, s2, t1, t2, frameDivision, rowDivision; //---------------define just to get it to compile, fix later
+	int numberOfFrames, numberOfRows, currentRow; //-----------------define just to get it to compile, fix later
+
+	for(int i = 0; i < strlen(string); i++){
+		int frame = string[i]- 32; //the current frame or letter to draw
+		// Keep currentFrame in range
+		if(frame >= numberOfFrames)
+			frame = frame % numberOfFrames;
+
+		// current row may change. Use modulus
+		if(s2 >= 1.0 && numberOfRows > 1)
+			currentRow = (currentRow + 1) % numberOfRows;
+
+		// update s1, s2, t1, t2
+		s1 = frame * frameDivision;
+		s2 = (frame * frameDivision) + frameDivision;
+		t1 = currentRow * rowDivision;
+		t2 = (currentRow * rowDivision) + rowDivision;
+
+		glDrawFrame(tex, x, y, w, h, s1, s2, t1, t2);
+	}
+}
+
 // Draw the sprite rotated by the number of degrees specified by the angle parameter
 void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle){
 

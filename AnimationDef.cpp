@@ -35,7 +35,7 @@ int AnimationDef::getFrameHeight()const{
 	return frameHeight;
 }
 
-// returns the facing direction of the current aniamtion
+// returns the facing direction of the current animation
 int AnimationDef::getFacingDirection()const{
 	return animations.at(currentAnimation).facingDirection;
 }
