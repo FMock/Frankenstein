@@ -1,3 +1,6 @@
+src/Frankenstein/Release/*
+src/Frankenstein/Debug/*
+src/Frankenstein/x64/*
 x86/*
 x64/*
 Debug/*
