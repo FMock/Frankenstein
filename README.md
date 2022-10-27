@@ -7,6 +7,11 @@ VS2019 v142 MSBuild Tools
 
 Currently Release x86 and x64 builds
 
+Application:
+Frankenstein\bin\x64\Release\Frankenstein.exe
+
+Use the arrow keys to move the dwarf fighter towards the skeleton
+
 OutDir:
 ../../bin/x86/$(Configuration)
 
