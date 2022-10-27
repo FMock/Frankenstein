@@ -19,11 +19,11 @@
 #include"TextString.h"
 
 /*  main.cpp
-	Project Name - SpriteVectorProject
+	Project Name - Frankenstein
 	Program Name - main.cpp
 	Author - Frank Mock
 	Start Date  - 1/27/2018 
-	Last update - 7/02/2018
+	Last update - 10/26/2022
 */
 
 // Set this to true to make the game loop exit.
