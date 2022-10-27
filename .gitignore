@@ -1,3 +1,5 @@
+x86/*
+x64/*
 Debug/*
 Release/*
 *.user
@@ -7,3 +9,4 @@ Release/*
 *.sln
 *.suo
 *.opensdf
+.vs/
