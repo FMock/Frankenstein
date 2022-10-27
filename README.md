@@ -7,18 +7,32 @@ VS2019 v142 MSBuild Tools
 
 Currently Release x86 and x64 builds
 
-<OutDir>../../bin/x86/$(Configuration)</OutDir>
-<AdditionalIncludeDirectories>..\..\dependencies\FMOD\inc;..\..\dependencies\SDL2\include;..\..\dependencies\GLEW\include;$</AdditionalIncludeDirectories>
-<AdditionalLibraryDirectories>..\..\dependencies\FMOD\lib;..\..\dependencies\SDL2\lib\x86;..\..\dependencies\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-<AdditionalDependencies>fmod_vc.lib;glew32.lib;glu32.lib;SDL2.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+OutDir:
+../../bin/x86/$(Configuration)
+
+AdditionalIncludeDirectories:
+..\..\dependencies\FMOD\inc;..\..\dependencies\SDL2\include;..\..\dependencies\GLEW\include
+
+AdditionalLibraryDirectories:
+..\..\dependencies\FMOD\lib;..\..\dependencies\SDL2\lib\x86;..\..\dependencies\GLEW\lib\Release\Win32
+
+AdditionalDependencies:
+fmod_vc.lib;glew32.lib;glu32.lib;SDL2.lib;opengl32.lib;%(AdditionalDependencies)
 
 _CRT_SECURE_NO_WARNINGS add to C++ preprocessor
 
 or
 
-<OutDir>../../bin/x64/$(Configuration)</OutDir>
-<AdditionalIncludeDirectories>..\..\dependencies\FMOD\inc;..\..\dependencies\SDL2\include;..\..\dependencies\GLEW\include;$</AdditionalIncludeDirectories>
-<AdditionalLibraryDirectories>..\..\dependencies\FMOD\lib;..\..\dependencies\SDL2\lib\x64;..\..\dependencies\GLEW\lib\Release\x64</AdditionalLibraryDirectories>
-<AdditionalDependencies>fmod64_vc.lib;glew32.lib;glu32.lib;SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+OutDir:
+../../bin/x64/$(Configuration)
+
+AdditionalIncludeDirectories:
+..\..\dependencies\FMOD\inc;..\..\dependencies\SDL2\include;..\..\dependencies\GLEW\include
+
+AdditionalLibraryDirectories:
+..\..\dependencies\FMOD\lib;..\..\dependencies\SDL2\lib\x64;..\..\dependencies\GLEW\lib\Release\x64
+
+AdditionalDependencies:
+fmod64_vc.lib;glew32.lib;glu32.lib;SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)
 
 _CRT_SECURE_NO_WARNINGS add to C++ preprocessor
