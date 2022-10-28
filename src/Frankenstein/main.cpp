@@ -23,7 +23,7 @@
 	Program Name - main.cpp
 	Author - Frank Mock
 	Start Date  - 1/27/2018 
-	Last update - 10/26/2022
+	Last update - 10/28/2022
 */
 
 // Set this to true to make the game loop exit.
@@ -54,22 +54,12 @@ StoreClerk storeClerk;
 TextString textStr;
 
 // Player Setup
-AnimatedSprite player2;
-std::vector<Animation> playerAnimations;
-Animation playerWalkLeft;
-Animation playerWalkRight;
-Animation playerWalkUp;
-Animation playerWalkDown;
-Animation playerStandRight;
-Animation playerStandLeft;
-AnimationDef animDef;
-std::map<std::string, int> animationMap;
-// End Player Setup
+Player player2;
 
 // Skeleton Setup
 std::vector<Skeleton*> skeletons = std::vector<Skeleton*>();
 const int NUMBER_OF_SKELETONS = 1;
-AnimatedSprite skeleton;
+Skeleton skeleton;
 std::vector<Animation> skeletonAnimations;
 Animation skeletonWalkLeft;
 Animation skeletonWalkRight;
@@ -137,38 +127,8 @@ int main(void)
 
 	srand (time(NULL));
 
-	// Create the player and enemy objects (GL image, xPosition, yPosition, width, height)
-	//player = Player(glTexImageTGAFile("../../images/magikarp.tga"), 300.0, 64.0, 44, 57);
-	//player = Player(glTexImageTGAFile("../../images/run_cycle.tga"), 300.0, 64.0, 1536, 128);
-
-
-	/*IN THIS GAME, THE PLAYERS FACING DIRECTION IS REPRESENTED AS AN INTEGER*/
-	animationMap["walking_left"] = 0;
-	playerWalkLeft = Animation(glTexImageTGAFile("../../images/dwarf_walk_left.tga"), 4, 1, 0, "walking_left", animationMap["walking_left"]); //(anim images, frames in animation, rows in animation, start row, name, direction)
-	playerAnimations.push_back(playerWalkLeft);
-
-	animationMap["walking_right"] = 1;
-	playerWalkRight = Animation(glTexImageTGAFile("../../images/dwarf_walk_right.tga"), 4, 1, 0, "walking_right", animationMap["walking_right"]);
-	playerAnimations.push_back(playerWalkRight);
-
-	animationMap["walking_up"] = 2;
-	playerWalkUp = Animation(glTexImageTGAFile("../../images/dwarf_walk_up.tga"), 4, 1, 0, "walking_up", animationMap["walking_up"]);
-	playerAnimations.push_back(playerWalkUp);
-	
-	animationMap["walking_down"] = 3;
-	playerWalkDown = Animation(glTexImageTGAFile("../../images/dwarf_walk_down.tga"), 4, 1, 0, "walking_down", animationMap["walking_down"]);
-	playerAnimations.push_back(playerWalkDown);
-
-	animationMap["stopped_facing_right"] = 4;
-	playerStandRight = Animation(glTexImageTGAFile("../../images/dwarf_stand_right.tga"), 1, 1, 0, "stopped_facing_right", animationMap["walking_right"]);
-	playerAnimations.push_back(playerStandRight);
-
-	animationMap["stopped_facing_left"] = 5;
-	playerStandLeft = Animation(glTexImageTGAFile("../../images/dwarf_stand_left.tga"), 1, 1, 0, "stopped_facing_left", animationMap["walking_left"]);
-	playerAnimations.push_back(playerStandLeft);
-
-	animDef = AnimationDef(1,64,104, playerAnimations, animationMap);
-	player2 = AnimatedSprite(300.0, 64.0, 64, 104, animDef, "player"); //xPos, yPos, player_width, player_height
+	// Create player
+	player2 = Player(300.0, 64.0, 64, 104, "player"); //xPos, yPos, player_width, player_height
 
 	storeClerk = StoreClerk(glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57);
 	player2.registerObserver(&storeClerk);

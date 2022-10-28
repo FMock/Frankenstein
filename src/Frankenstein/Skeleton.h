@@ -11,6 +11,7 @@ public:
 	int number;
 	void update(float);
 	virtual void respondToObserved(AnimatedSprite*);
+	void SetupAnimation() override;
 };
 
 #endif
