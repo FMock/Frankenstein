@@ -8,6 +8,13 @@ AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, AnimationDe
 							   facingDirection(facingDirections::RIGHT), name(n),
 							   Sprite(xPos, yPos, w, h){}
 
+AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, const std::string& n) :
+	speed_x(140.0), speed_y(140.0),
+	facingDirection(facingDirections::RIGHT), name(n),
+	Sprite(xPos, yPos, w, h)
+{
+}
+
 AnimatedSprite::~AnimatedSprite(){}
 
 /*Update position information, animationDef info, and notify any observers*/
@@ -118,4 +125,9 @@ std::string AnimatedSprite::to_string()const{
 		<< "facing direction = " << facingDirection << std::endl
 		<< "current animation = " << getCurrentAnimation() << std::endl;
 	return oss.str();
+}
+
+void AnimatedSprite::SetAnimationDef(AnimationDef& anDef)
+{
+	this->animationDef = anDef;
 }

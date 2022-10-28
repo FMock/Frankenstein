@@ -11,6 +11,10 @@ void Skeleton::respondToObserved(AnimatedSprite* a){
 	}
 }
 
+void Skeleton::SetupAnimation()
+{
+}
+
 void Skeleton::update(float dt){
 	if(x > 800){ //*****************************REMOVE 800, SETUP GAME WORLD CONSTANTS**************************************
 		changeAnimation(animationDef.animationMap["walking_left"]);
