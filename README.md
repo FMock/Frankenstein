@@ -1,5 +1,7 @@
 Frankenstein is a game engine written in C++ to develop simple 2D games
-This is just for fun - Don't take it to serious. It's a spinoff of an old college project of mine.
+This is just for fun. 
+Don't take it too serious. 
+It's a spinoff of an old college project of mine.
 
 Setup:
 
