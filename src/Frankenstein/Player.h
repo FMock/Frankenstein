@@ -17,6 +17,7 @@ public:
 	Player(float, float, int, int, AnimationDef&, const std::string&);
 	std::string to_string() const;
 	void SetupAnimation() override;
+	void update(float);
 private:
 	Animation m_playerWalkLeft;
 	Animation m_playerWalkRight;
