@@ -52,3 +52,21 @@ void Player::SetupAnimation()
 	m_animDef = AnimationDef(1, 64, 104, m_playerAnimations, m_animationMap);
 	SetAnimationDef(m_animDef);
 }
+
+void Player::update(float dt)
+{
+	if (x > 800) // TODO REMOVE MAGIC NUMBER 800, USE GAME WORLD CONSTANT
+	{ 
+		changeAnimation(animationDef.animationMap["walking_left"]);
+		change_x = 0;
+		moveLeft();
+	}
+	else if (x < 0)
+	{
+		changeAnimation(animationDef.animationMap["walking_right"]);
+		change_x = 0;
+		moveRight();
+	}
+
+	AnimatedSprite::update(dt);
+}

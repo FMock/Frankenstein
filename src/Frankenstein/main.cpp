@@ -60,12 +60,6 @@ Player player2;
 std::vector<Skeleton*> skeletons = std::vector<Skeleton*>();
 const int NUMBER_OF_SKELETONS = 1;
 Skeleton skeleton;
-std::vector<Animation> skeletonAnimations;
-Animation skeletonWalkLeft;
-Animation skeletonWalkRight;
-AnimationDef animDefSkeleton;
-std::map<std::string, int> animationMapSkeleton;
-// End Skeleton Setup
 
 // Function Prototyes
 void processInputs(float);
@@ -80,7 +74,8 @@ enum directions{LEFT, RIGHT, UP, DOWN, STOPPED_FACE_RIGHT, STOPPED_FACE_LEFT};
 int main(void)
 {
 	// Initialize SDL.
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) 
+	{
 		fprintf(stderr, "Could not initialize SDL. ErrorCode=%s\n", SDL_GetError());
 		return 1;
 	}
@@ -88,30 +83,37 @@ int main(void)
 	// Create the window and OpenGL context.
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
 	SDL_Window* window = SDL_CreateWindow(
 		"Frankenstein Test App",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		800, 600,
 		SDL_WINDOW_OPENGL);
-	if (!window) {
+
+	if (!window) 
+	{
 		fprintf(stderr, "Could not create window. ErrorCode=%s\n", SDL_GetError());
 		SDL_Quit();
 		return 1;
 	}
+
 	SDL_GL_CreateContext(window);
 
 	// Make sure we have a recent version of OpenGL.
 	GLenum glewError = glewInit();
-	if (glewError != GLEW_OK) {
+	if (glewError != GLEW_OK) 
+	{
 		fprintf(stderr, "Could not initialize glew. ErrorCode=%s\n", glewGetErrorString(glewError));
 		SDL_Quit();
 		return 1;
 	}
-	if (GLEW_VERSION_2_0) {
+	if (GLEW_VERSION_2_0) 
+	{
 		fprintf(stderr, "OpenGL 2.0 or greater supported: Version=%s\n",
 			glGetString(GL_VERSION));
 	}
-	else {
+	else 
+	{
 		fprintf(stderr, "OpenGL max supported version is too low.\n");
 		SDL_Quit();
 		return 1;
@@ -133,19 +135,12 @@ int main(void)
 	storeClerk = StoreClerk(glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57);
 	player2.registerObserver(&storeClerk);
 
-	// ---- Skeleton Creation  -----------------------------------------//
-	animationMapSkeleton["walking_left"] = 0;
-	skeletonWalkLeft = Animation(glTexImageTGAFile("../../images/skeleton_walking_left.tga"), 3, 1, 0, "walking_left", animationMapSkeleton["walking_left"]);
-	skeletonAnimations.push_back(skeletonWalkLeft);
-	animationMapSkeleton["walking_right"] = 1;
-	skeletonWalkRight = Animation(glTexImageTGAFile("../../images/skeleton_walking_right.tga"), 3, 1, 0, "walking_right", animationMapSkeleton["walking_right"]);
-	skeletonAnimations.push_back(skeletonWalkRight);
-	animDefSkeleton = AnimationDef(1, 27, 48, skeletonAnimations, animationMapSkeleton);
-
-	for(int i = 0; i < NUMBER_OF_SKELETONS; i++){
+	// Skeleton Creation
+	for(int i = 0; i < NUMBER_OF_SKELETONS; i++)
+	{
 		float xpos = float(rand() % 150 + 50);
 		float ypos = float(rand() % 400 + 50);
-		skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, animDefSkeleton, "skeleton"));
+		skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, "skeleton"));
 		skeletons.at(i)->number = i + 1;
 		player2.registerObserver(skeletons.at(i)); // register the skeleton as an observer of the player
 	}
@@ -155,9 +150,9 @@ int main(void)
 	textStr.Initialize("Frankenstein!", glTexImageTGAFile("../../images/game_font.tga"), 496, 216, 31, 36, 150, 150);
 
 
-	//********** GAME LOOP *************************************************************
-	while (!shouldExit) {
-
+	// GAME LOOP
+	while (!shouldExit) 
+	{
 		kbState = SDL_GetKeyboardState(NULL);// We want status of all the keys
 
 		// Compute deltaTime - the time difference between each frame
@@ -168,7 +163,8 @@ int main(void)
 
 		// Calculate FPS and print
 		f_currentTime = SDL_GetTicks();
-		if (f_currentTime > f_previousTime + 1000) {
+		if (f_currentTime > f_previousTime + 1000) 
+		{
 			seconds++;
 			//printf("fps: %i\n", fps);
 			fps = 0;
@@ -179,13 +175,13 @@ int main(void)
 
 		assert(glGetError() == GL_NO_ERROR);
 
-		// ************* Process Player Inputs  ****************************************
+		// Process Player Inputs
 		processInputs(deltaTime);
 
-		// ************* Update Objects  ************************************************
+		// Update Objects
 		update(deltaTime); //update game objects
 		
-		// *********** Draw Frame *******************************************************
+		// Draw Frame
 		glClearColor(0, 0, 0, 1);  
 		glClear(GL_COLOR_BUFFER_BIT); // Be sure to always draw objects after this
 		draw(); // draw game objects
