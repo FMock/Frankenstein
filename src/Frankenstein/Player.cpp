@@ -1,8 +1,14 @@
 #include"Player.h"
+#include "Game.h"
 
 Player::Player(){}
 
 Player::Player(float x, float y, int w, int h, const std::string& n) : AnimatedSprite(x, y, w, h, n)
+{
+	SetupAnimation();
+}
+
+Player::Player(float x, float y, int w, int h, const std::string& n, Game* game) : AnimatedSprite(x, y, w, h, n, game)
 {
 	SetupAnimation();
 }

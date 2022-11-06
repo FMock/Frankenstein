@@ -10,6 +10,7 @@ class Skeleton : public Observer, public AnimatedSprite{
 public:
 	inline Skeleton(){}
 	Skeleton(float, float, int, int, const std::string&);
+	Skeleton(float, float, int, int, const std::string&, class Game* game);
 	Skeleton(float, float, int, int, AnimationDef&, const std::string&);
 	int number;
 	void update(float);

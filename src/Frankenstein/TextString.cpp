@@ -1,6 +1,8 @@
 #include "TextString.h"
+#include "Game.h"
 
 TextString::TextString(){} // mandatory default constructor required by VS
+TextString::TextString(Game* game) : m_game(game){} 
 
 void TextString::Initialize(const char* string, GLuint image, int imageWidth, int imageHeight, int frameWidth, int frameHeight, int x, int y)
 {

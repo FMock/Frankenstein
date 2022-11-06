@@ -21,6 +21,7 @@ class AnimatedSprite : public Sprite{
 public:
 	AnimatedSprite();
 	AnimatedSprite(float, float, int, int, const std::string&);
+	AnimatedSprite(float, float, int, int, const std::string&, class Game* game);
 	AnimatedSprite(float, float, int, int, AnimationDef&, const std::string&);
 	~AnimatedSprite(void);
 	AnimationDef animationDef;
@@ -45,10 +46,12 @@ public:
 	virtual void SetupAnimation() = 0;
 
 protected:
+
 	float speed_x;
 	float speed_y;
 	std::vector<Observer*> myObservers;
 	std::map<std::string, int> m_animationMap;
 	void SetAnimationDef(AnimationDef&);
+	class Game* m_game;
 };
 #endif

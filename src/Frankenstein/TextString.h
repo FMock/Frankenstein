@@ -10,6 +10,7 @@
 class TextString{
 public:
 	TextString();
+	TextString(class Game* game);
 	void Initialize(const char* string, GLuint image, int imageWidth, int imageHeight, int frameWidth, int frameHeight, int x, int y);
 	void drawText();
 
@@ -22,6 +23,7 @@ private:
 	int m_frameHeight; // height of frame within image that gets drawn
 	float m_s1, m_s2, m_t1, m_t2; // coords that specify area of image to draw
 	int m_x, m_y, m_numColumns, m_numRows; //(x, y) = where to start drawing on screen
+	class Game* m_game;
 };
 
 #endif
