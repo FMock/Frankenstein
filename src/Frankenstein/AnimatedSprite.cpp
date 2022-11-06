@@ -1,4 +1,5 @@
 #include"AnimatedSprite.h"
+#include "Game.h"
 
 
 AnimatedSprite::AnimatedSprite(){}
@@ -6,7 +7,15 @@ AnimatedSprite::AnimatedSprite(){}
 AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, AnimationDef& animDef, const std::string& n) :  
 							   speed_x(140.0), speed_y(140.0), animationDef(animDef),
 							   facingDirection(facingDirections::RIGHT), name(n),
-							   Sprite(xPos, yPos, w, h){}
+							   Sprite(xPos, yPos, w, h), m_game(nullptr){}
+
+AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, const std::string& n, Game* game) :
+	speed_x(140.0), speed_y(140.0),
+	facingDirection(facingDirections::RIGHT), name(n),
+	Sprite(xPos, yPos, w, h),
+	m_game(game)
+{
+}
 
 AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, const std::string& n) :
 	speed_x(140.0), speed_y(140.0),

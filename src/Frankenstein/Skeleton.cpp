@@ -1,6 +1,13 @@
 #include"Skeleton.h"
+#include "Game.h"
 
 Skeleton::Skeleton(float xPos, float yPos, int w, int h, const std::string& n) : Observer(), AnimatedSprite(xPos, yPos, w, h, n)
+{
+	SetupAnimation();
+	moveLeft(); // initially move Skeleton left
+}
+
+Skeleton::Skeleton(float xPos, float yPos, int w, int h, const std::string& n, Game* game) : Observer(), AnimatedSprite(xPos, yPos, w, h, n, game)
 {
 	SetupAnimation();
 	moveLeft(); // initially move Skeleton left

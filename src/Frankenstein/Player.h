@@ -14,6 +14,7 @@ class Player : public AnimatedSprite{
 public:
 	Player();
 	Player(float, float, int, int, const std::string&);
+	Player(float, float, int, int, const std::string&, class Game* game);
 	Player(float, float, int, int, AnimationDef&, const std::string&);
 	std::string to_string() const;
 	void SetupAnimation() override;
