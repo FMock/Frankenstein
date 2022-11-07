@@ -123,48 +123,7 @@ void DrawUtilities::glDrawSprite(GLuint tex, int x, int y, int w, int h)
 	glEnd();
 }
 
-/* Draw a frame from a OpenGL texture.
- * The lower left of a texture is (0.0, 0.0) and upper right is (1.0, 1.0)
- * Horizontal axis is s, and vertical axis is t
- * param tex is an openGL texture mapped to a quad
- * param x is position to draw sprite in the game world
- * param y is position to draw sprite in the game world
- * param w is frame width - width of part of texture to be drawn
- * param h is frame height - height of part of texture to be drawn
- * param s1 is left texture coordinate
- * param s2 is right texture coordinate
- * param t1 is lower texture coordinate
- * param t2 is upper texture coordinate
- *
-  A* * * * * *B
-   *         *
-   *         *
-   *         *
-  D* * * * * *C
- */
-void DrawUtilities::glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2)
-{
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glBegin(GL_QUADS);
-	{
-		glColor3ub(255, 255, 255);
-
-		glTexCoord2f(s1, t2);  // A
-		glVertex2i(x, y);
-
-		glTexCoord2f(s2, t2);  // B
-		glVertex2i(x + w, y);
-
-		glTexCoord2f(s2, t1); // C
-		glVertex2i(x + w, y + h);
-
-		glTexCoord2f(s1, t1); // D
-		glVertex2i(x, y + h);
-	}
-	glEnd();
-}
-
-
+// Draws a single frame of a GL texture
 void DrawUtilities::glDrawFrame(GlDrawFrameParams params)
 {
 	glBindTexture(GL_TEXTURE_2D, params.tex);
@@ -224,7 +183,19 @@ void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char 
 		t1 = currentRow * rowDivision;
 		t2 = (currentRow * rowDivision) + rowDivision;
 
-		glDrawFrame(tex, x, y, w, h, s1, s2, t1, t2);
+		GlDrawFrameParams params;
+		params.tex = tex;
+		params.x = x;
+		params.y = y;
+		params.w = w;
+		params.h = h;
+		params.s1 = s1;
+		params.s2 = s2;
+		params.t1 = t1;
+		params.t2 = t2;
+
+		glDrawFrame(params);
+		//glDrawFrame(tex, x, y, w, h, s1, s2, t1, t2);
 	}
 }
 
