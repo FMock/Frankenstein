@@ -195,7 +195,6 @@ void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char 
 		params.t2 = t2;
 
 		glDrawFrame(params);
-		//glDrawFrame(tex, x, y, w, h, s1, s2, t1, t2);
 	}
 }
 
