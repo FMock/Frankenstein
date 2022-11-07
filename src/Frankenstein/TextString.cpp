@@ -1,6 +1,8 @@
 #include "TextString.h"
 #include "Game.h"
 
+using namespace DrawUtilities;
+
 TextString::TextString(){} // mandatory default constructor required by VS
 TextString::TextString(Game* game) : m_game(game){} 
 
@@ -49,6 +51,18 @@ void TextString::drawText(){
 		m_t1 = currentRow * rowDivision;
 		m_t2 = (currentRow * rowDivision) + rowDivision;
 
-		glDrawFrame(m_image, m_x + i * (m_frameWidth/2), m_y, m_frameWidth, m_frameHeight, m_s1, m_s2, m_t1, m_t2);
+		GlDrawFrameParams params;
+
+		params.tex = m_image;
+		params.x = m_x + i * (m_frameWidth / 2);
+		params.y = m_y;
+		params.w = m_frameWidth;
+		params.h = m_frameHeight;
+		params.s1 = m_s1;
+		params.s2 = m_s2;
+		params.t1 = m_t1;
+		params.t2 = m_t2;
+
+		glDrawFrame(params);
 	}
 }

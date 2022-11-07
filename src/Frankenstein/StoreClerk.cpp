@@ -1,5 +1,7 @@
 #include"StoreClerk.h"
 
+using namespace DrawUtilities;
+
 // Required to make a default constructor to avoid compile error C2512
 
 StoreClerk::StoreClerk() : Observer(), Sprite(){

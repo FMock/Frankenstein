@@ -1,6 +1,4 @@
 #pragma once
-#ifndef PLAYER_H
-#define PLAYER_H
 
 #include<GL/glew.h>
 #include<vector>
@@ -29,5 +27,3 @@ private:
 	PlayerAnimations m_playerAnimations;
 	AnimationDef m_animDef;
 };
-
-#endif

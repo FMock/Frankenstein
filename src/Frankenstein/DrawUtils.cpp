@@ -1,20 +1,24 @@
 /***********************************************************************
 Utilities for loading and drawing sprites.
 */
+#include"DrawUtils.h"
 #include<GL/glew.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include<assert.h>
 
+using namespace DrawUtilities;
+
 /* Load a file into an OpenGL texture, and return that texture. */
-GLuint glTexImageTGAFile(const char* filename)
+GLuint DrawUtilities::glTexImageTGAFile(const char* filename)
 {
 	const int BPP = 4;
 
 	/* open the file */
 	FILE* file = fopen(filename, "rb");
-	if (file == NULL) {
+	if (file == NULL)
+	{
 		fprintf(stderr, "File: %s -- Could not open for reading.\n", filename);
 		return 0;
 	}
@@ -26,7 +30,8 @@ GLuint glTexImageTGAFile(const char* filename)
 	* be either a 2 or a 3. */
 	unsigned char imageTypeCode;
 	fread(&imageTypeCode, 1, 1, file);
-	if (imageTypeCode != 2 && imageTypeCode != 3) {
+	if (imageTypeCode != 2 && imageTypeCode != 3)
+	{
 		fclose(file);
 		fprintf(stderr, "File: %s -- Unsupported TGA type: %d\n", filename, imageTypeCode);
 		return 0;
@@ -48,18 +53,22 @@ GLuint glTexImageTGAFile(const char* filename)
 	unsigned char* bytes = (unsigned char*)calloc(imageWidth * imageHeight * BPP, 1);
 
 	/* read in data */
-	if (bitCount == 32) {
+	if (bitCount == 32)
+	{
 		int it;
-		for (it = 0; it != imageWidth * imageHeight; ++it) {
+		for (it = 0; it != imageWidth * imageHeight; ++it)
+		{
 			bytes[it * BPP + 0] = fgetc(file);
 			bytes[it * BPP + 1] = fgetc(file);
 			bytes[it * BPP + 2] = fgetc(file);
 			bytes[it * BPP + 3] = fgetc(file);
 		}
 	}
-	else {
+	else
+	{
 		int it;
-		for (it = 0; it != imageWidth * imageHeight; ++it) {
+		for (it = 0; it != imageWidth * imageHeight; ++it)
+		{
 			bytes[it * BPP + 0] = fgetc(file);
 			bytes[it * BPP + 1] = fgetc(file);
 			bytes[it * BPP + 2] = fgetc(file);
@@ -92,7 +101,7 @@ GLuint glTexImageTGAFile(const char* filename)
  * param y is position to draw sprite in the game world
  * param w is frame width - width of part of texture to be drawn
  * param h is frame height - height of part of texture to be drawn*/
-void glDrawSprite(GLuint tex, int x, int y, int w, int h)
+void DrawUtilities::glDrawSprite(GLuint tex, int x, int y, int w, int h)
 {
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBegin(GL_QUADS);
@@ -126,14 +135,15 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
  * param s2 is right texture coordinate
  * param t1 is lower texture coordinate
  * param t2 is upper texture coordinate
- * 
+ *
   A* * * * * *B
    *         *
    *         *
    *         *
   D* * * * * *C
  */
-void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2){
+void DrawUtilities::glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, float t1, float t2)
+{
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glBegin(GL_QUADS);
 	{
@@ -154,6 +164,30 @@ void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, flo
 	glEnd();
 }
 
+
+void DrawUtilities::glDrawFrame(GlDrawFrameParams params)
+{
+	glBindTexture(GL_TEXTURE_2D, params.tex);
+	glBegin(GL_QUADS);
+	{
+		glColor3ub(255, 255, 255);
+
+		glTexCoord2f(params.s1, params.t2);  // A
+		glVertex2i(params.x, params.y);
+
+		glTexCoord2f(params.s2, params.t2);  // B
+		glVertex2i(params.x + params.w, params.y);
+
+		glTexCoord2f(params.s2, params.t1); // C
+		glVertex2i(params.x + params.w, params.y + params.h);
+
+		glTexCoord2f(params.s1, params.t1); // D
+		glVertex2i(params.x, params.y + params.h);
+	}
+	glEnd();
+}
+
+
 /* drawRasterText - Draws a text string at (x, y) in the game world. tex must be an font image
  * param tex - the font image
  * param x - x position in the game world to draw the string
@@ -161,7 +195,8 @@ void glDrawFrame(GLuint tex, int x, int y, int w, int h, float s1, float s2, flo
  * param w is frame width - width of part of texture to be drawn
  * param h is frame height - height of part of texture to be drawn
  */
-void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]){
+void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char string[])
+{
 	float s1 = 0.0f; //---------------define just to get it to compile, fix later
 	float s2 = 0.0f; //---------------define just to get it to compile, fix later
 	float t1 = 0.0f; //---------------define just to get it to compile, fix later
@@ -172,14 +207,15 @@ void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]){
 	int numberOfRows = 0; //-----------------define just to get it to compile, fix later
 	int currentRow = 0; //-----------------define just to get it to compile, fix later
 
-	for(int i = 0; i < strlen(string); i++){
-		int frame = string[i]- 32; //the current frame or letter to draw
+	for (int i = 0; i < strlen(string); i++)
+	{
+		int frame = string[i] - 32; //the current frame or letter to draw
 		// Keep currentFrame in range
-		if(frame >= numberOfFrames)
+		if (frame >= numberOfFrames)
 			frame = frame % numberOfFrames;
 
 		// current row may change. Use modulus
-		if(s2 >= 1.0 && numberOfRows > 1)
+		if (s2 >= 1.0 && numberOfRows > 1)
 			currentRow = (currentRow + 1) % numberOfRows;
 
 		// update s1, s2, t1, t2
@@ -193,7 +229,8 @@ void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]){
 }
 
 // Draw the sprite rotated by the number of degrees specified by the angle parameter
-void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle){
+void DrawUtilities::glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle)
+{
 
 	glMatrixMode(GL_TEXTURE); // make the texture matrix the target of matrix function calls
 
@@ -205,5 +242,4 @@ void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle){
 	glDrawSprite(tex, x, y, w, h);
 
 	glPopMatrix();
-
 }
