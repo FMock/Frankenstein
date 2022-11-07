@@ -34,7 +34,7 @@ namespace DrawUtilities
 	/// <paramref name="w">int w is frame width - width of part of texture to be drawn</paramref>
 	/// <paramref name="h">is frame height - height of part of texture to be drawn</paramref>
 	/// <paramref name="s1">float s1 is left texture coordinate</paramref>
-	/// <paramref name="s2">s2 is right texture coordinate</paramref>
+	/// <paramref name="s2">float s2 is right texture coordinate</paramref>
 	/// <paramref name="t1">float t1 is lower texture coordinate</paramref>
 	/// <paramref name="t2">float t2 is upper texture coordinate</paramref>
 	///
