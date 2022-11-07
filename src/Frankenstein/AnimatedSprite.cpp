@@ -1,6 +1,7 @@
 #include"AnimatedSprite.h"
-#include "Game.h"
+#include"Game.h"
 
+using namespace DrawUtilities;
 
 AnimatedSprite::AnimatedSprite(){}
 
@@ -27,7 +28,8 @@ AnimatedSprite::AnimatedSprite(float xPos, float yPos, int w, int h, const std::
 AnimatedSprite::~AnimatedSprite(){}
 
 /*Update position information, animationDef info, and notify any observers*/
-void AnimatedSprite::update(float deltaTime){
+void AnimatedSprite::update(float deltaTime)
+{
 	x += change_x * deltaTime;
 	y += change_y * deltaTime;
 	position.setX(x);
@@ -39,19 +41,26 @@ void AnimatedSprite::update(float deltaTime){
 }
 
 /* Draw this AnimatedSprite to the screen */
-void AnimatedSprite::draw(){
+void AnimatedSprite::draw()
+{
+	GlDrawFrameParams params;
+	params.tex = animationDef.animations.at(animationDef.getCurrentAnimation()).image;
+	params.x = int(x);
+	params.y = int(y);
+	params.w = animationDef.getFrameWidth();
+	params.h = animationDef.getFrameHeight();
+	params.s1 = animationDef.animations.at(animationDef.getCurrentAnimation()).s1;
+	params.s2 = animationDef.animations.at(animationDef.getCurrentAnimation()).s2;
+	params.t1 = animationDef.animations.at(animationDef.getCurrentAnimation()).t1;
+	params.t2 = animationDef.animations.at(animationDef.getCurrentAnimation()).t2;
 
-	glDrawFrame(animationDef.animations.at(animationDef.getCurrentAnimation()).image, 
-			    int(x), int(y), animationDef.getFrameWidth(), animationDef.getFrameHeight(), 
-				animationDef.animations.at(animationDef.getCurrentAnimation()).s1, 
-				animationDef.animations.at(animationDef.getCurrentAnimation()).s2, 
-				animationDef.animations.at(animationDef.getCurrentAnimation()).t1, 
-				animationDef.animations.at(animationDef.getCurrentAnimation()).t2);
+	glDrawFrame(params);
 }
 
 /* Change the currently playing animation to x
  * param x - the next animation to play*/
-void AnimatedSprite::changeAnimation(int x){
+void AnimatedSprite::changeAnimation(int x)
+{
 	animationDef.previousAnimation = animationDef.getCurrentAnimation();
 	animationDef.setCurrentAnimation(x);
 
@@ -59,49 +68,58 @@ void AnimatedSprite::changeAnimation(int x){
 	facingDirection = animationDef.getFacingDirection();
 }
 
-void AnimatedSprite::moveLeft(){
+void AnimatedSprite::moveLeft()
+{
 	change_x += -speed_x;
 	change_y = 0;
 }
 
-void AnimatedSprite::moveRight(){
+void AnimatedSprite::moveRight()
+{
 	change_x += speed_x;
 	change_y = 0;
 }
 
-void AnimatedSprite::moveUp(){
+void AnimatedSprite::moveUp()
+{
 	change_x = 0;
 	change_y -= speed_y;
 }
 
-void AnimatedSprite::moveDown(){
+void AnimatedSprite::moveDown()
+{
 	change_x = 0;
 	change_y += speed_y;
 }
 
-void AnimatedSprite::stop(){
+void AnimatedSprite::stop()
+{
 	change_x = 0;
 	change_y = 0;
 }
 
-int AnimatedSprite::getCurrentAnimation()const{
+int AnimatedSprite::getCurrentAnimation()const
+{
 	return animationDef.getCurrentAnimation();
 }
 
 // Notify all observers of this sprites info
 void AnimatedSprite::notifyObservers(){
-	for(unsigned int i = 0; i < myObservers.size(); i++){
+	for(unsigned int i = 0; i < myObservers.size(); i++)
+	{
 		myObservers.at(i)->notify(this);
 	}
 }
 
 // Add observers to this sprites list of observers
-void AnimatedSprite::registerObserver(Observer *observer){
+void AnimatedSprite::registerObserver(Observer *observer)
+{
 	myObservers.push_back(observer);
 }
 
 // Remove an observer from this sprites list of observers
-void AnimatedSprite::unregisterObserver(Observer *observer){
+void AnimatedSprite::unregisterObserver(Observer *observer)
+{
 	for(unsigned int i = 0; i < myObservers.size(); i++){
 		if(myObservers.at(i)==observer){
 			myObservers.erase(myObservers.begin()+i);
@@ -110,16 +128,19 @@ void AnimatedSprite::unregisterObserver(Observer *observer){
 	}
 }
 
-int AnimatedSprite::getFacingDirection()const{
+int AnimatedSprite::getFacingDirection()const
+{
 	return facingDirection;
 }
 
-void AnimatedSprite::setFacingDirection(int x){
+void AnimatedSprite::setFacingDirection(int x)
+{
 	if(x > 0)
 		facingDirection = x;
 }
 
-std::string AnimatedSprite::to_string()const{
+std::string AnimatedSprite::to_string()const
+{
 	std::ostringstream oss;
 	oss << "x = " << x << std::endl
 		<< "y = " << y << std::endl

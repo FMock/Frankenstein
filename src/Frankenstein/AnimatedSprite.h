@@ -1,6 +1,4 @@
 #pragma once
-#ifndef ANIMATEDSPRITE_H
-#define ANIMATEDSPRITE_H
 
 #include"Sprite.h"
 #include"AnimationDef.h"
@@ -54,4 +52,3 @@ protected:
 	void SetAnimationDef(AnimationDef&);
 	class Game* m_game;
 };
-#endif

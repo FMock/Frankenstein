@@ -1,6 +1,4 @@
 #pragma once
-#ifndef STORECLERK_H
-#define STORECLERK_H
 
 #include<GL/glew.h>
 #include<stdio.h>
@@ -18,5 +16,3 @@ public:
 	GLuint image;
 	virtual void respondToObserved(AnimatedSprite*);
 };
-
-#endif

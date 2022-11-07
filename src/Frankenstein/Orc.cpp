@@ -1,5 +1,7 @@
 #include"Orc.h"
 
+using namespace DrawUtilities;
+
 // Required to make a default constructor to avoid compile error C2512
 
 Orc::Orc() : Observer(), Sprite(){

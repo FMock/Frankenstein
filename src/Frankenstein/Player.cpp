@@ -1,6 +1,8 @@
 #include"Player.h"
 #include "Game.h"
 
+using namespace DrawUtilities;
+
 Player::Player(){}
 
 Player::Player(float x, float y, int w, int h, const std::string& n) : AnimatedSprite(x, y, w, h, n)

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SPRITE_H
-#define SPRITE_H
 
 #include<GL/glew.h>
 #include"AABB.h"
@@ -31,5 +29,3 @@ protected:
 	int height;
 	Vector2D position;
 };
-
-#endif

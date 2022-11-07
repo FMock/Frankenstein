@@ -1,6 +1,5 @@
 #pragma once
-#ifndef AABB_H
-#define AABB_H
+
 
 struct AABB{
 	inline AABB(){}
@@ -11,4 +10,3 @@ struct AABB{
 	inline void setW(int w){this->w = w;}
 	inline void setH(int h){this->h = h;}
 };
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef VECTOR2D_H
-#define VECTOR2D_H
 
 #include<math.h>
 
@@ -34,5 +32,3 @@ public:
 	void normalize();
 	float operator *(const Vector2D&) const;
 };
-
-#endif

@@ -1,6 +1,5 @@
 #pragma once
-#ifndef ANIMATION_H
-#define ANIMATION_H
+
 #include<string>
 #include<GL/glew.h>
 
@@ -35,4 +34,3 @@ public:
 	void nextFrame(float, float);   // draws the next frame of the animation
 	GLuint image;
 };
-#endif

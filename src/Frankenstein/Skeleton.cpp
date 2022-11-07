@@ -1,6 +1,8 @@
 #include"Skeleton.h"
 #include "Game.h"
 
+using namespace DrawUtilities;
+
 Skeleton::Skeleton(float xPos, float yPos, int w, int h, const std::string& n) : Observer(), AnimatedSprite(xPos, yPos, w, h, n)
 {
 	SetupAnimation();

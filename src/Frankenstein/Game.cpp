@@ -5,7 +5,7 @@
 #include"StoreClerk.h"
 #include"Skeleton.h"
 #include"TextString.h"
-
+#include"DrawUtils.h"
 
 Game::Game()
 {
@@ -237,7 +237,7 @@ void Game::LoadData()
 {
 	// Create player
 	m_player = new Player(300.0, 64.0, 64, 104, "player", this); //xPos, yPos, player_width, player_height
-	m_storeClerk = new StoreClerk(glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57);
+	m_storeClerk = new StoreClerk(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57);
 	m_player->registerObserver(m_storeClerk);
 	// Skeleton Creation
 	for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
@@ -250,7 +250,7 @@ void Game::LoadData()
 
 			// Test to draw text
 		m_textStr = new TextString(this);
-		m_textStr->Initialize("Frankenstein!", glTexImageTGAFile("../../images/game_font.tga"), 496, 216, 31, 36, 150, 150);
+		m_textStr->Initialize("Frankenstein!", DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"), 496, 216, 31, 36, 150, 150);
 	}
 }
 

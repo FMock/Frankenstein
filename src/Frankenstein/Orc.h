@@ -1,6 +1,4 @@
 #pragma once
-#ifndef ORC_H
-#define ORC_H
 
 #include<GL/glew.h>
 #include<stdio.h>
@@ -21,5 +19,3 @@ public:
 protected:
 	inline void observerResponse(){ printf("Attack!\n"); }
 };
-
-#endif
