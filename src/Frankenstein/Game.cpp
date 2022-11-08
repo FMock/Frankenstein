@@ -5,6 +5,7 @@
 #include"StoreClerk.h"
 #include"Skeleton.h"
 #include"TextString.h"
+#include"TextStringParams.h"
 #include"DrawUtils.h"
 
 Game::Game()
@@ -237,21 +238,30 @@ void Game::LoadData()
 {
 	// Create player
 	m_player = new Player(300.0, 64.0, 64, 104, "player", this); //xPos, yPos, player_width, player_height
-	m_storeClerk = new StoreClerk(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57);
+	m_storeClerk = new StoreClerk(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57); // TODO READ INIT PARAMS FROM CONFIG FILE
 	m_player->registerObserver(m_storeClerk);
+
 	// Skeleton Creation
 	for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
 	{
 		float xpos = float(rand() % 150 + 50);
 		float ypos = float(rand() % 400 + 50);
-		m_skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, "skeleton"));
+		m_skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, "skeleton")); // TODO READ INIT PARAMS FROM CONFIG FILE
 		m_skeletons.at(i)->number = i + 1;
 		m_player->registerObserver(m_skeletons.at(i)); // register the skeleton as an observer of the player
-
-			// Test to draw text
-		m_textStr = new TextString(this);
-		m_textStr->Initialize("Frankenstein!", DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"), 496, 216, 31, 36, 150, 150);
 	}
+
+	// Initialize a TextString to drawing
+	m_textStr = new TextString(this);
+	TextStringInitParams params;
+	params.image = DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"); // TODO READ INIT PARAMS FROM CONFIG FILE
+	params.imageWidth = 496;
+	params.imageHeight = 216;
+	params.frameWidth = 31;
+	params.frameHeight = 36;
+	params.x = 150;
+	params.y = 150;
+	m_textStr->Initialize("Frankenstein!", params);
 }
 
 void Game::UnloadData()
