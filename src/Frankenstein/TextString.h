@@ -6,12 +6,13 @@
 #include"DrawUtils.h"
 #include<string>
 #include<cmath>
+#include"TextStringParams.h"
 
 class TextString{
 public:
 	TextString();
 	TextString(class Game* game);
-	void Initialize(const char* string, GLuint image, int imageWidth, int imageHeight, int frameWidth, int frameHeight, int x, int y);
+	void Initialize(const char* string, TextStringInitParams& params);
 	void drawText();
 
 private:

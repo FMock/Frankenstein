@@ -4,20 +4,20 @@
 using namespace DrawUtilities;
 
 TextString::TextString(){} // mandatory default constructor required by VS
-TextString::TextString(Game* game) : m_game(game){} 
+TextString::TextString(Game* game) : m_game(game){}
 
-void TextString::Initialize(const char* string, GLuint image, int imageWidth, int imageHeight, int frameWidth, int frameHeight, int x, int y)
+void TextString::Initialize(const char* string, TextStringInitParams& params)
 {
 	m_string = string;
-	m_image = image;
-	m_width = imageWidth;
-	m_height = imageHeight;
-	m_frameWidth = frameWidth;
-	m_frameHeight = frameHeight;
-	m_numColumns = (imageWidth / frameWidth);
-	m_numRows = (imageHeight / frameHeight);
-	m_x = x;
-	m_y = y;
+	m_image = params.image;
+	m_width = params.imageWidth;
+	m_height = params.imageHeight;
+	m_frameWidth = params.frameWidth;
+	m_frameHeight = params.frameHeight;
+	m_numColumns = (params.imageWidth / params.frameWidth);
+	m_numRows = (params.imageHeight / params.frameHeight);
+	m_x = params.x;
+	m_y = params.y;
 }
 
 /*Draws each character of this objects string
