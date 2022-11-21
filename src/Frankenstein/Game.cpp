@@ -145,6 +145,10 @@ void Game::ProcessInput()
 			m_player->changeAnimation(m_player->animationDef.animationMap["stopped_facing_right"]);
 		else if (m_player->getFacingDirection() == m_player->LEFT)
 			m_player->changeAnimation(m_player->animationDef.animationMap["stopped_facing_left"]);
+		else if (m_player->getFacingDirection() == m_player->DOWN)
+			m_player->changeAnimation(m_player->animationDef.animationMap["stopped_facing_down"]);
+		else if (m_player->getFacingDirection() == m_player->UP)
+			m_player->changeAnimation(m_player->animationDef.animationMap["stopped_facing_up"]);
 		m_player->stop();
 	}
 	else if (m_kbState[SDL_SCANCODE_RIGHT] && !m_kbPrevState[SDL_SCANCODE_RIGHT])
@@ -217,7 +221,7 @@ void Game::UpdateGame()
 void Game::GenerateOutput()
 {
 	// Draw Frame
-	glClearColor(255, 0, 0, 1);
+	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT); // Be sure to always draw objects after this
 
 	m_player->draw();

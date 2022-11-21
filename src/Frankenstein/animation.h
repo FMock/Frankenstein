@@ -2,6 +2,8 @@
 
 #include<string>
 #include<GL/glew.h>
+#include "SpriteSheetInfo.h"
+#include "AnimationParameters.h"
 
 /* Animation.h
  * Encapsulates a single animation and it's intrinsic properties.
@@ -21,16 +23,20 @@ public:
 	 * param facingDirection - character facing direction shown in the animation
 	 */
 	Animation(GLuint image, int a, int b, int c, const std::string& d, const int facingDirection);
-	int numberOfFrames; // number of frames in one row a the animation (all rows must contain the same number of frames)
-	int numberOfRows;   // total number of rows for this animation
-	int startingRow;    // the row this animation starts at on the spritesheet
-	int currentFrame;   // initial value is 0
-	int currentRow;     // initial value is 0
-	float frameDivision;
-	float rowDivision;
-	float s1, s2, t1, t2;
-	std::string name;
-	int facingDirection;
+	Animation(AnimationParameters& params, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection);
+	Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection);
+	int m_numberOfFrames; // number of frames in one row a the animation (all rows must contain the same number of frames)
+	int m_numberOfRows;   // total number of rows for this animation
+	int m_startingRow;    // the row this animation starts at on the spritesheet
+	int m_startingCol;
+	SpriteSheetInfo m_spriteSheetInfo;
+	int m_currentFrame;   // initial value is 0
+	int m_currentRow;     // initial value is 0
+	float m_frameDivision;
+	float m_rowDivision;
+	float m_s1, m_s2, m_t1, m_t2;
+	std::string m_name;
+	int m_facingDirection;
 	void nextFrame(float, float);   // draws the next frame of the animation
-	GLuint image;
+	GLuint m_image;
 };

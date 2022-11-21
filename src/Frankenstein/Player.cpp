@@ -1,5 +1,7 @@
 #include"Player.h"
 #include "Game.h"
+#include "SpriteSheetInfo.h"
+#include "AnimationParameters.h"
 
 using namespace DrawUtilities;
 
@@ -32,29 +34,51 @@ std::string Player::to_string() const {
 
 void Player::SetupAnimation()
 {
-	/*IN THIS GAME, THE PLAYERS FACING DIRECTION IS REPRESENTED AS AN INTEGER*/
+	// TODO: LOAD ANIMATION INFO FROM A CONFIG FILE
+	SpriteSheetInfo spriteSheetInfo;
+	spriteSheetInfo.m_spriteSheetWidth = 256;
+	spriteSheetInfo.m_spriteSheetHeight = 520;
+	spriteSheetInfo.m_frameWidth = 64;
+	spriteSheetInfo.m_frameHeight = 104;
+
+	GLuint texture = glTexImageTGAFile("../../images/dwarf.tga"); // dwarf animation spritesheet
+
+	AnimationParameters animationParams;
+	animationParams.image = texture;
+	animationParams.framesInAnimation = 4;
+	animationParams.rowsInAnimation = 1;
+	animationParams.startingRow = 3;
+	animationParams.startingCol = 0;
 	m_animationMap["walking_left"] = 0;
-	m_playerWalkLeft = Animation(glTexImageTGAFile("../../images/dwarf_walk_left.tga"), 4, 1, 0, "walking_left", m_animationMap["walking_left"]); //(anim images, frames in animation, rows in animation, start row, name, direction)
+	m_playerWalkLeft = Animation(animationParams, spriteSheetInfo, "walking_left", m_animationMap["walking_left"]);
 	m_playerAnimations.push_back(m_playerWalkLeft);
 
 	m_animationMap["walking_right"] = 1;
-	m_playerWalkRight = Animation(glTexImageTGAFile("../../images/dwarf_walk_right.tga"), 4, 1, 0, "walking_right", m_animationMap["walking_right"]);
+	m_playerWalkRight = Animation(texture, 4, 1, 4, 0, spriteSheetInfo, "walking_right", m_animationMap["walking_right"]);
 	m_playerAnimations.push_back(m_playerWalkRight);
 
 	m_animationMap["walking_up"] = 2;
-	m_playerWalkUp = Animation(glTexImageTGAFile("../../images/dwarf_walk_up.tga"), 4, 1, 0, "walking_up", m_animationMap["walking_up"]);
+	m_playerWalkUp = Animation(texture, 4, 1, 1, 0, spriteSheetInfo, "walking_up", m_animationMap["walking_up"]);
 	m_playerAnimations.push_back(m_playerWalkUp);
 
 	m_animationMap["walking_down"] = 3;
-	m_playerWalkDown = Animation(glTexImageTGAFile("../../images/dwarf_walk_down.tga"), 4, 1, 0, "walking_down", m_animationMap["walking_down"]);
+	m_playerWalkDown = Animation(texture, 4, 1, 2, 0, spriteSheetInfo, "walking_down", m_animationMap["walking_down"]);
 	m_playerAnimations.push_back(m_playerWalkDown);
 
 	m_animationMap["stopped_facing_right"] = 4;
-	m_playerStandRight = Animation(glTexImageTGAFile("../../images/dwarf_stand_right.tga"), 1, 1, 0, "stopped_facing_right", m_animationMap["walking_right"]);
+	m_playerStandRight = Animation(texture, 1, 1, 0, 1, spriteSheetInfo, "stopped_facing_right", m_animationMap["walking_right"]);
 	m_playerAnimations.push_back(m_playerStandRight);
 
 	m_animationMap["stopped_facing_left"] = 5;
-	m_playerStandLeft = Animation(glTexImageTGAFile("../../images/dwarf_stand_left.tga"), 1, 1, 0, "stopped_facing_left", m_animationMap["walking_left"]);
+	m_playerStandLeft = Animation(texture, 1, 1, 0, 0, spriteSheetInfo, "stopped_facing_left", m_animationMap["walking_left"]);
+	m_playerAnimations.push_back(m_playerStandLeft);
+
+	m_animationMap["stopped_facing_down"] = 6;
+	m_playerStandLeft = Animation(texture, 1, 1, 0, 2, spriteSheetInfo, "stopped_facing_down", m_animationMap["walking_down"]);
+	m_playerAnimations.push_back(m_playerStandLeft);
+
+	m_animationMap["stopped_facing_up"] = 7;
+	m_playerStandLeft = Animation(texture, 1, 1, 0, 3, spriteSheetInfo, "stopped_facing_up", m_animationMap["walking_up"]);
 	m_playerAnimations.push_back(m_playerStandLeft);
 
 	m_animDef = AnimationDef(1, 64, 104, m_playerAnimations, m_animationMap);
