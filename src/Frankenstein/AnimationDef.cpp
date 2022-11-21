@@ -1,4 +1,5 @@
 #include"AnimationDef.h"
+#include"animation.h"
 
 AnimationDef::AnimationDef(){}
 
@@ -37,5 +38,5 @@ int AnimationDef::getFrameHeight()const{
 
 // returns the facing direction of the current animation
 int AnimationDef::getFacingDirection()const{
-	return animations.at(currentAnimation).facingDirection;
+	return animations.at(currentAnimation).m_facingDirection;
 }

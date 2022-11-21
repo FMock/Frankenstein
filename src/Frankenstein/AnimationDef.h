@@ -4,6 +4,7 @@
 #include"animation.h"
 #include<vector>
 #include<map>
+#include<string>
 
 class AnimationDef{
 public:

@@ -9,27 +9,76 @@ Animation::Animation(){}
 * param b - numberOfRows, the number of rows this animation consists of
 * param c - startingRow, the row this animation starts at on the spritesheet
 * param d - name of this animation */
-Animation::Animation(GLuint image, int a, int b, int c, const std::string& d, const int facingDir): image(image),
-					numberOfFrames(a), numberOfRows(b), frameDivision(1.0/numberOfFrames),
-					rowDivision(1.0/numberOfRows), startingRow(c), currentFrame(0),
-					currentRow(startingRow), s1(0.0), s2(frameDivision), t1(currentRow*rowDivision), 
-					t2((currentRow*rowDivision) + rowDivision), name(d), facingDirection(facingDir){}
+Animation::Animation(GLuint image, int a, int b, int c, const std::string& d, const int facingDir): m_image(image),
+					m_numberOfFrames(a), m_numberOfRows(b), m_frameDivision(1.0/m_numberOfFrames),
+					m_rowDivision(1.0/m_numberOfRows), m_startingRow(c), m_currentFrame(0),
+					m_currentRow(m_startingRow), m_s1(0.0), m_s2(m_frameDivision), m_t1(m_currentRow*m_rowDivision), 
+					m_t2((m_currentRow*m_rowDivision) + m_rowDivision), m_name(d), m_facingDirection(facingDir){}
+
+Animation::Animation(AnimationParameters& params, SpriteSheetInfo& spriteSheetInfo, const std::string& name, const int facingDirection) :
+
+	m_spriteSheetInfo(spriteSheetInfo),
+	m_image(params.image),
+	m_numberOfFrames(params.framesInAnimation),
+	m_numberOfRows(params.rowsInAnimation),
+	m_startingRow(params.startingRow),
+	m_startingCol(params.startingCol),
+	m_frameDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetWidth / m_spriteSheetInfo.m_frameWidth)),
+	m_rowDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetHeight / m_spriteSheetInfo.m_frameHeight)),
+	m_currentFrame(m_startingCol),
+	m_currentRow(m_startingRow),
+	m_s1(0.0),
+	m_s2(m_frameDivision),
+	m_t1(m_currentRow* m_rowDivision),
+	m_t2((m_currentRow* m_rowDivision) + m_rowDivision),
+	m_name(name),
+	m_facingDirection(facingDirection)
+{
+}
+
+Animation::Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection) :
+	m_image(image),
+	m_numberOfFrames(a),
+	m_numberOfRows(b),
+	m_startingRow(c),
+	m_startingCol(c2),
+	m_spriteSheetInfo(spriteSheetInfo),
+	m_frameDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetWidth / m_spriteSheetInfo.m_frameWidth)),
+	m_rowDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetHeight / m_spriteSheetInfo.m_frameHeight)),
+	m_currentFrame(m_startingCol),
+	m_currentRow(m_startingRow),
+	m_s1(0.0),
+	m_s2(m_frameDivision),
+	m_t1(m_currentRow* m_rowDivision),
+	m_t2((m_currentRow* m_rowDivision) + m_rowDivision),
+	m_name(d), m_facingDirection(facingDirection)
+{
+}
 
 void Animation::nextFrame(float frameTime, float animFPS){
 	// Calculate how many frames to jump ahead
-	currentFrame += frameTime * animFPS;
+	m_currentFrame += frameTime * animFPS;
 
 	// Keep currentFrame in range
-	if(currentFrame >= numberOfFrames)
-		currentFrame = currentFrame % numberOfFrames;
+	if (m_currentFrame >= m_numberOfFrames)
+		m_currentFrame = m_currentFrame % m_numberOfFrames;
 
 	// current row may change. Use modulus
-	if(s2 >= 1.0 && numberOfRows > 1)
-		currentRow = (currentRow + 1) % numberOfRows;
+	if (m_s2 >= 1.0 && m_numberOfRows > 1)
+		m_currentRow = (m_currentRow + 1) % m_numberOfRows;
 
 	// update s1, s2, t1, t2
-	s1 = currentFrame * frameDivision;
-	s2 = (currentFrame * frameDivision) + frameDivision;
-	t1 = currentRow * rowDivision;
-	t2 = (currentRow * rowDivision) + rowDivision;
+	if (m_numberOfFrames == 1)
+	{
+		m_s1 = m_startingCol * m_frameDivision;
+		m_s2 = (m_startingCol * m_frameDivision) + m_frameDivision;
+	}
+	else
+	{
+		m_s1 = m_currentFrame * m_frameDivision;
+		m_s2 = (m_currentFrame * m_frameDivision) + m_frameDivision;
+	}
+
+	m_t1 = m_currentRow * m_rowDivision;
+	m_t2 = (m_currentRow * m_rowDivision) + m_rowDivision;
 }

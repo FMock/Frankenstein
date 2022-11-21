@@ -1,4 +1,5 @@
 #include"AnimatedSprite.h"
+#include"animation.h"
 #include"Game.h"
 
 using namespace DrawUtilities;
@@ -44,15 +45,15 @@ void AnimatedSprite::update(float deltaTime)
 void AnimatedSprite::draw()
 {
 	GlDrawFrameParams params;
-	params.tex = animationDef.animations.at(animationDef.getCurrentAnimation()).image;
+	params.tex = animationDef.animations.at(animationDef.getCurrentAnimation()).m_image;
 	params.x = int(x);
 	params.y = int(y);
 	params.w = animationDef.getFrameWidth();
 	params.h = animationDef.getFrameHeight();
-	params.s1 = animationDef.animations.at(animationDef.getCurrentAnimation()).s1;
-	params.s2 = animationDef.animations.at(animationDef.getCurrentAnimation()).s2;
-	params.t1 = animationDef.animations.at(animationDef.getCurrentAnimation()).t1;
-	params.t2 = animationDef.animations.at(animationDef.getCurrentAnimation()).t2;
+	params.s1 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_s1;
+	params.s2 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_s2;
+	params.t1 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_t1;
+	params.t2 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_t2;
 
 	glDrawFrame(params);
 }
