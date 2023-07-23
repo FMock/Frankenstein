@@ -6,7 +6,7 @@
 	Author - Frank Mock
 	Description - Simple Game Engine
 	Start Date  - 1/27/2018
-	Last update - 11/05/2022
+	Last update - 07/23/2023
 */
 
 int main(int argc, char** argv)
