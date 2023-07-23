@@ -1,0 +1,9 @@
+Name,FrameCount,RowCount,StartRow,StartCol,AnimationCount
+walking_left,4,1,3,0,8
+walking_right,4,1,4,0,8
+walking_up,4,1,1,0,8
+walking_down,4,1,2,0,8
+stopped_facing_right,1,1,0,1,8
+stopped_facing_left,1,1,0,0,8
+stopped_facing_down,1,1,0,2,8
+stopped_facing_up,1,1,0,3,8

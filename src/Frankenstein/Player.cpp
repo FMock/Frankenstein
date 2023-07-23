@@ -1,9 +1,12 @@
+#include <iostream>
 #include"Player.h"
 #include "Game.h"
 #include "SpriteSheetInfo.h"
 #include "AnimationParameters.h"
+#include "Utilities.h"
 
 using namespace DrawUtilities;
+using namespace Frankenstein::Utility;
 
 Player::Player(){}
 
@@ -34,54 +37,36 @@ std::string Player::to_string() const {
 
 void Player::SetupAnimation()
 {
-	// TODO: LOAD ANIMATION INFO FROM A CONFIG FILE
-	SpriteSheetInfo spriteSheetInfo;
-	spriteSheetInfo.m_spriteSheetWidth = 256;
-	spriteSheetInfo.m_spriteSheetHeight = 520;
-	spriteSheetInfo.m_frameWidth = 64;
-	spriteSheetInfo.m_frameHeight = 104;
+	SpriteSheetParameters spriteSheetParams;
 
-	GLuint texture = glTexImageTGAFile("../../images/dwarf.tga"); // dwarf animation spritesheet
+	if (!Utilities::ReadXmlFile(R"(../../config/PlayerSpriteSheetInfoParams.xml)", spriteSheetParams))
+	{
+		std::cout << "There was a problem reading PlayerSpriteSheetInfoParams.xml" << std::endl;
+		exit(1);
+	}
+	std::string spriteSheetParamFile = "../../images/" + spriteSheetParams.m_fileName; // dwarf.tga
+	GLuint texture = glTexImageTGAFile(spriteSheetParamFile.c_str());
 
-	AnimationParameters animationParams;
-	animationParams.image = texture;
-	animationParams.framesInAnimation = 4;
-	animationParams.rowsInAnimation = 1;
-	animationParams.startingRow = 3;
-	animationParams.startingCol = 0;
-	m_animationMap["walking_left"] = 0;
-	m_playerWalkLeft = Animation(animationParams, spriteSheetInfo, "walking_left", m_animationMap["walking_left"]);
-	m_playerAnimations.push_back(m_playerWalkLeft);
+	auto animationParamVect = std::vector< AnimationParameters>();
+	if (!Utilities::ReadCsvFile(R"(../../config/PlayerAnimationParams.csv)", animationParamVect))
+	{
+		std::cout << "There was a problem reading PlayerAnimationParams.csv" << std::endl;
+		exit(1);
+	}
 
-	m_animationMap["walking_right"] = 1;
-	m_playerWalkRight = Animation(texture, 4, 1, 4, 0, spriteSheetInfo, "walking_right", m_animationMap["walking_right"]);
-	m_playerAnimations.push_back(m_playerWalkRight);
+	// Load up all player animations
+	int count = animationParamVect[1].animationCount;
+	for (int i = 0; i < count; i++)
+	{
+		auto name = animationParamVect[i].animationName;
+		m_animationMap[name] = i;
+		m_playerAnimations.push_back(Animation(animationParamVect[i], spriteSheetParams, name, m_animationMap[name]));
+	}
 
-	m_animationMap["walking_up"] = 2;
-	m_playerWalkUp = Animation(texture, 4, 1, 1, 0, spriteSheetInfo, "walking_up", m_animationMap["walking_up"]);
-	m_playerAnimations.push_back(m_playerWalkUp);
-
-	m_animationMap["walking_down"] = 3;
-	m_playerWalkDown = Animation(texture, 4, 1, 2, 0, spriteSheetInfo, "walking_down", m_animationMap["walking_down"]);
-	m_playerAnimations.push_back(m_playerWalkDown);
-
-	m_animationMap["stopped_facing_right"] = 4;
-	m_playerStandRight = Animation(texture, 1, 1, 0, 1, spriteSheetInfo, "stopped_facing_right", m_animationMap["walking_right"]);
-	m_playerAnimations.push_back(m_playerStandRight);
-
-	m_animationMap["stopped_facing_left"] = 5;
-	m_playerStandLeft = Animation(texture, 1, 1, 0, 0, spriteSheetInfo, "stopped_facing_left", m_animationMap["walking_left"]);
-	m_playerAnimations.push_back(m_playerStandLeft);
-
-	m_animationMap["stopped_facing_down"] = 6;
-	m_playerStandLeft = Animation(texture, 1, 1, 0, 2, spriteSheetInfo, "stopped_facing_down", m_animationMap["walking_down"]);
-	m_playerAnimations.push_back(m_playerStandLeft);
-
-	m_animationMap["stopped_facing_up"] = 7;
-	m_playerStandLeft = Animation(texture, 1, 1, 0, 3, spriteSheetInfo, "stopped_facing_up", m_animationMap["walking_up"]);
-	m_playerAnimations.push_back(m_playerStandLeft);
-
-	m_animDef = AnimationDef(1, 64, 104, m_playerAnimations, m_animationMap);
+	auto frameWidth = spriteSheetParams.m_frameWidth;
+	auto frameHeight = spriteSheetParams.m_frameHeight;
+	int spritesheetRows = spriteSheetParams.m_spriteSheetHeight / spriteSheetParams.m_frameHeight;
+	m_animDef = AnimationDef(spritesheetRows, frameWidth, frameHeight, m_playerAnimations, m_animationMap);
 	SetAnimationDef(m_animDef);
 }
 

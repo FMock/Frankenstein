@@ -1,0 +1,9 @@
+<Parameters>
+	<SpriteSheetInfoParams parameters>
+		<SpriteSheetWidth>256</SpriteSheetWidth>
+		<SpriteSheetHeight>520</SpriteSheetHeight>
+		<FrameWidth>64</FrameWidth>
+		<FrameHeight>104</FrameHeight>
+		<FileName>dwarf.tga</FileName>
+	</SpriteSheetInfoParams parameters>
+</Parameters>

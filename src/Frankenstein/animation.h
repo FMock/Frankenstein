@@ -11,7 +11,7 @@
 
 class Animation{
 public:
-	Animation();
+	Animation() = default;
 
 	/* Animation
 	 * param image - the OpenGL image texture that contains the animation frames
@@ -23,13 +23,13 @@ public:
 	 * param facingDirection - character facing direction shown in the animation
 	 */
 	Animation(GLuint image, int a, int b, int c, const std::string& d, const int facingDirection);
-	Animation(AnimationParameters& params, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection);
-	Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection);
+	Animation(AnimationParameters& params, SpriteSheetParameters& spriteSheetParams, const std::string& d, const int facingDirection);
+	Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetParameters& spriteSheetParams, const std::string& d, const int facingDirection);
 	int m_numberOfFrames; // number of frames in one row a the animation (all rows must contain the same number of frames)
 	int m_numberOfRows;   // total number of rows for this animation
 	int m_startingRow;    // the row this animation starts at on the spritesheet
 	int m_startingCol;
-	SpriteSheetInfo m_spriteSheetInfo;
+	SpriteSheetParameters m_spriteSheetInfo;
 	int m_currentFrame;   // initial value is 0
 	int m_currentRow;     // initial value is 0
 	float m_frameDivision;
