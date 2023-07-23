@@ -10,7 +10,7 @@ struct AnimationParameters
 	int rowsInAnimation;
 	int startingRow;
 	int startingCol;
-	//SpriteSheetInfo spriteSheetInfo;
-	//std::string animationName;
+	std::string animationName;
+	int animationCount;
 	//int facingDirection;
 };

@@ -1,7 +1,5 @@
 #include"animation.h"
 
-Animation::Animation(){}
-
 /* Animation
 * param image - The openGL texture that represents the frames of the animation
 * param a - numberOfFrames, the number of frames in one row of the animation. Multi row
@@ -15,9 +13,9 @@ Animation::Animation(GLuint image, int a, int b, int c, const std::string& d, co
 					m_currentRow(m_startingRow), m_s1(0.0), m_s2(m_frameDivision), m_t1(m_currentRow*m_rowDivision), 
 					m_t2((m_currentRow*m_rowDivision) + m_rowDivision), m_name(d), m_facingDirection(facingDir){}
 
-Animation::Animation(AnimationParameters& params, SpriteSheetInfo& spriteSheetInfo, const std::string& name, const int facingDirection) :
+Animation::Animation(AnimationParameters& params, SpriteSheetParameters& spriteSheetParams, const std::string& name, const int facingDirection) :
 
-	m_spriteSheetInfo(spriteSheetInfo),
+	m_spriteSheetInfo(spriteSheetParams),
 	m_image(params.image),
 	m_numberOfFrames(params.framesInAnimation),
 	m_numberOfRows(params.rowsInAnimation),
@@ -36,13 +34,13 @@ Animation::Animation(AnimationParameters& params, SpriteSheetInfo& spriteSheetIn
 {
 }
 
-Animation::Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetInfo& spriteSheetInfo, const std::string& d, const int facingDirection) :
+Animation::Animation(GLuint image, int a, int b, int c, int c2, SpriteSheetParameters& spriteSheetParams, const std::string& d, const int facingDirection) :
 	m_image(image),
 	m_numberOfFrames(a),
 	m_numberOfRows(b),
 	m_startingRow(c),
 	m_startingCol(c2),
-	m_spriteSheetInfo(spriteSheetInfo),
+	m_spriteSheetInfo(spriteSheetParams),
 	m_frameDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetWidth / m_spriteSheetInfo.m_frameWidth)),
 	m_rowDivision(1.0 / (m_spriteSheetInfo.m_spriteSheetHeight / m_spriteSheetInfo.m_frameHeight)),
 	m_currentFrame(m_startingCol),
