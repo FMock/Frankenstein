@@ -60,6 +60,7 @@ void Player::SetupAnimation()
 	{
 		auto name = animationParamVect[i].animationName;
 		m_animationMap[name] = i;
+		animationParamVect[i].image = texture;
 		m_playerAnimations.push_back(Animation(animationParamVect[i], spriteSheetParams, name, m_animationMap[name]));
 	}
 

@@ -51,7 +51,7 @@ bool Game::Initialize()
 	}
 	if (GLEW_VERSION_2_0)
 	{
-		fprintf(stderr, "OpenGL 2.0 or greater supported: Version=%s\n",
+		fprintf(stderr, "OpenGL 2.0 or greater supported: Version = %s\n",
 			glGetString(GL_VERSION));
 	}
 	else
