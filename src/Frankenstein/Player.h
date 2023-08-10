@@ -17,14 +17,8 @@ public:
 	std::string to_string() const;
 	void SetupAnimation() override;
 	void update(float);
+
 private:
-	// TODO: NOT EXTENSIBLE. FIX BY DYNAMICALLY LOADING THE PLAYERS ANIMATIONS AT STARTUP FROM CONFIG FILE
-	Animation m_playerWalkLeft;
-	Animation m_playerWalkRight;
-	Animation m_playerWalkUp;
-	Animation m_playerWalkDown;
-	Animation m_playerStandRight;
-	Animation m_playerStandLeft;
 	PlayerAnimations m_playerAnimations;
 	AnimationDef m_animDef;
 };

@@ -120,7 +120,7 @@ void DrawUtilities::glDrawSprite(GLuint tex, int x, int y, int w, int h)
 		glTexCoord2f(0.0f, 0.0f); // bottom left
 		glVertex2i(x, y + h);
 	}
-	glEnd();
+	glEnd(); // sends all submitted data to the GPU for rendering
 }
 
 // Draws a single frame of a GL texture
