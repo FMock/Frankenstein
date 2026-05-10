@@ -8,6 +8,8 @@
 #include "TextString.h"
 #include "TextStringParams.h"
 #include "DrawUtils.h"
+#include "XmlSettings.h"
+#include <direct.h>
 
 Game::Game()
 {
@@ -26,11 +28,25 @@ bool Game::Initialize()
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	m_window = SDL_CreateWindow(
-	"Frankenstein Test App",
-	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-	800, 600,
-	SDL_WINDOW_OPENGL);
+
+
+	printf("Current working directory: %s\n", _getcwd(NULL, 0));
+   if (!m_settings.Load("../../config/Game-Settings.xml")) {
+	  fprintf(stderr, "Could not load settings file ../../config/Game-Settings.xml\n");
+	  return false;
+   }
+   int winWidth = m_settings.GetInt("Window", "Width");
+   int winHeight = m_settings.GetInt("Window", "Height");
+   std::string winTitle = m_settings.GetString("Window", "Title");
+   if (winWidth == 0 || winHeight == 0 || winTitle.empty()) {
+	  fprintf(stderr, "Missing required window settings in XML.\n");
+	  return false;
+   }
+   m_window = SDL_CreateWindow(
+	  winTitle.c_str(),
+	  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	  winWidth, winHeight,
+	  SDL_WINDOW_OPENGL);
 
 	if (!m_window)
 	{
@@ -63,9 +79,9 @@ bool Game::Initialize()
 	}
 
 	// Setup OpenGL state.
-	glViewport(0, 0, 800, 600);
-	glMatrixMode(GL_PROJECTION);
-	glOrtho(0, 800, 600, 0, 0, 100);
+   glViewport(0, 0, winWidth, winHeight);
+   glMatrixMode(GL_PROJECTION);
+   glOrtho(0, winWidth, winHeight, 0, 0, 100);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -241,33 +257,74 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	// Create player
-   m_player = std::make_unique<Player>(static_cast<float>(300.0), static_cast<float>(64.0), static_cast<int>(64), static_cast<int>(104), "player", this); //xPos, yPos, player_width, player_height
-   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), static_cast<int>(650), static_cast<int>(300), static_cast<int>(44), static_cast<int>(57)); // TODO READ INIT PARAMS FROM CONFIG FILE
+   // Player
+   float playerX = static_cast<float>(m_settings.GetInt("Player", "X"));
+   float playerY = static_cast<float>(m_settings.GetInt("Player", "Y"));
+   int playerW = m_settings.GetInt("Player", "Width");
+   int playerH = m_settings.GetInt("Player", "Height");
+   std::string playerName = m_settings.GetString("Player", "Name");
+   if (playerW == 0 || playerH == 0 || playerName.empty()) {
+	  fprintf(stderr, "Missing required player settings in XML.\n");
+	  return;
+   }
+   m_player = std::make_unique<Player>(playerX, playerY, playerW, playerH, playerName, this);
+
+   // StoreClerk
+   std::string clerkImg = m_settings.GetString("StoreClerk", "Image");
+   int clerkX = m_settings.GetInt("StoreClerk", "X");
+   int clerkY = m_settings.GetInt("StoreClerk", "Y");
+   int clerkW = m_settings.GetInt("StoreClerk", "Width");
+   int clerkH = m_settings.GetInt("StoreClerk", "Height");
+   if (clerkImg.empty() || clerkW == 0 || clerkH == 0) {
+	  fprintf(stderr, "Missing required store clerk settings in XML.\n");
+	  return;
+   }
+   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile(clerkImg.c_str()), clerkX, clerkY, clerkW, clerkH);
    m_player->registerObserver(m_storeClerk.get());
 
-   // Skeleton Creation
-   for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
-   {
-	   float xpos = float(rand() % 150 + 50);
-	   float ypos = float(rand() % 400 + 50);
-      auto skeleton = std::make_unique<Skeleton>(static_cast<float>(xpos), static_cast<float>(ypos), static_cast<int>(27), static_cast<int>(48), "skeleton"); // TODO READ INIT PARAMS FROM CONFIG FILE
-	   skeleton->number = i + 1;
-	   m_player->registerObserver(skeleton.get()); // register the skeleton as an observer of the player
-	   m_skeletons.push_back(std::move(skeleton));
+   // Skeletons
+   int skeletonCount = m_settings.GetInt("Skeleton", "Count");
+   int skeletonXMin = m_settings.GetInt("Skeleton", "XMin");
+   int skeletonXMax = m_settings.GetInt("Skeleton", "XMax");
+   int skeletonYMin = m_settings.GetInt("Skeleton", "YMin");
+   int skeletonYMax = m_settings.GetInt("Skeleton", "YMax");
+   int skeletonW = m_settings.GetInt("Skeleton", "Width");
+   int skeletonH = m_settings.GetInt("Skeleton", "Height");
+   std::string skeletonName = m_settings.GetString("Skeleton", "Name");
+   if (skeletonCount == 0 || skeletonW == 0 || skeletonH == 0 || skeletonName.empty()) {
+	  fprintf(stderr, "Missing required skeleton settings in XML.\n");
+	  return;
+   }
+   for (int i = 0; i < skeletonCount; i++) {
+	  float xpos = static_cast<float>(rand() % (skeletonXMax - skeletonXMin + 1) + skeletonXMin);
+	  float ypos = static_cast<float>(rand() % (skeletonYMax - skeletonYMin + 1) + skeletonYMin);
+	  auto skeleton = std::make_unique<Skeleton>(xpos, ypos, skeletonW, skeletonH, skeletonName);
+	  skeleton->number = i + 1;
+	  m_player->registerObserver(skeleton.get());
+	  m_skeletons.push_back(std::move(skeleton));
    }
 
-   // Initialize a TextString to drawing
+   // Font/TextString
    m_textStr = std::make_unique<TextString>(this);
    TextStringInitParams params;
-   params.image = DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"); // TODO READ INIT PARAMS FROM CONFIG FILE
-   params.imageWidth = 496;
-   params.imageHeight = 216;
-   params.frameWidth = 31;
-   params.frameHeight = 36;
-   params.x = 150;
-   params.y = 150;
-   m_textStr->Initialize("Frankenstein!", params);
+   std::string fontImg = m_settings.GetString("Font", "Image");
+   if (fontImg.empty()) {
+	  fprintf(stderr, "Missing required font image setting in XML.\n");
+	  return;
+   }
+   params.image = DrawUtilities::glTexImageTGAFile(fontImg.c_str());
+   params.imageWidth = m_settings.GetInt("Font", "ImageWidth");
+   params.imageHeight = m_settings.GetInt("Font", "ImageHeight");
+   params.frameWidth = m_settings.GetInt("Font", "FrameWidth");
+   params.frameHeight = m_settings.GetInt("Font", "FrameHeight");
+   params.x = m_settings.GetInt("Font", "X");
+   params.y = m_settings.GetInt("Font", "Y");
+   std::string fontText = m_settings.GetString("Font", "Text");
+   if (params.imageWidth == 0 || params.imageHeight == 0 || params.frameWidth == 0 || params.frameHeight == 0 || fontText.empty()) {
+	  fprintf(stderr, "Missing required font settings in XML.\n");
+	  return;
+   }
+   m_textStr->Initialize(fontText.c_str(), params);
 }
 
 void Game::UnloadData()

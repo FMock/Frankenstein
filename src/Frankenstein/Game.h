@@ -10,6 +10,7 @@
 #include "StoreClerk.h"
 #include "Skeleton.h"
 #include "TextString.h"
+#include "XmlSettings.h"
 
 const int NUMBER_OF_SKELETONS = 1;
 
@@ -56,4 +57,6 @@ private:
     std::unique_ptr<Player> m_player;
 	std::unique_ptr<StoreClerk> m_storeClerk;
 	std::vector<std::unique_ptr<Skeleton>> m_skeletons;
+
+	XmlSettings m_settings;
 };

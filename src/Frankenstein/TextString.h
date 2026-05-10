@@ -16,7 +16,7 @@ public:
 	void drawText();
 
 private:
-	const char* m_string;
+	std::string m_string;
 	GLuint m_image;
 	int m_width;  // image width
 	int m_height; // image height

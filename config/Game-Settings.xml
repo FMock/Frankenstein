@@ -1,0 +1,41 @@
+<Settings>
+  <Window>
+    <Width>800</Width>
+    <Height>600</Height>
+    <Title>Frankenstein Test App</Title>
+  </Window>
+  <Player>
+    <X>300</X>
+    <Y>64</Y>
+    <Width>64</Width>
+    <Height>104</Height>
+    <Name>player</Name>
+  </Player>
+  <StoreClerk>
+    <Image>../../images/magikarp.tga</Image>
+    <X>650</X>
+    <Y>300</Y>
+    <Width>44</Width>
+    <Height>57</Height>
+  </StoreClerk>
+  <Skeleton>
+    <Count>1</Count>
+    <XMin>50</XMin>
+    <XMax>200</XMax>
+    <YMin>50</YMin>
+    <YMax>450</YMax>
+    <Width>27</Width>
+    <Height>48</Height>
+    <Name>skeleton</Name>
+  </Skeleton>
+  <Font>
+    <Image>../../images/game_font.tga</Image>
+    <ImageWidth>496</ImageWidth>
+    <ImageHeight>216</ImageHeight>
+    <FrameWidth>31</FrameWidth>
+    <FrameHeight>36</FrameHeight>
+    <X>150</X>
+    <Y>150</Y>
+    <Text>Frankenstein!</Text>
+  </Font>
+</Settings>
