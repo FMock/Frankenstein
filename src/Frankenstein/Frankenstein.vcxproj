@@ -154,6 +154,7 @@
     <ClInclude Include="TextStringParams.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="XmlSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="TextString.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Vector2D.cpp" />
+    <ClCompile Include="XmlSettings.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

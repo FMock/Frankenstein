@@ -38,7 +38,7 @@ void TextString::drawText(){
 	int currentCol = 0;
 	int currentRow = 0;
 
-	for(int i = 0; i < strlen(m_string); i++){
+	for (size_t i = 0; i < m_string.size(); i++) {
 
 		int asciiValue = m_string[i]; // get ascii value of character
 
@@ -54,7 +54,7 @@ void TextString::drawText(){
 		GlDrawFrameParams params;
 
 		params.tex = m_image;
-		params.x = m_x + i * (m_frameWidth / 2);
+		params.x = m_x + static_cast<int>(i) * (m_frameWidth / 2);
 		params.y = m_y;
 		params.w = m_frameWidth;
 		params.h = m_frameHeight;
