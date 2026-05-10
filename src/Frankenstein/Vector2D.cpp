@@ -77,7 +77,7 @@ Vector2D& Vector2D::operator -=(const Vector2D& v){
 
 // return the length of this vector
 float Vector2D::magnitude() const{
-	return sqrt(x*x + y*y);
+   return static_cast<float>(sqrt(x*x + y*y));
 }
 
 // Turn this vector into a unit vector
@@ -91,5 +91,5 @@ void Vector2D::normalize(){
 }
 
 float Vector2D::operator *(const Vector2D& v) const{
-	return x*v.x + y*v.y;
+   return static_cast<float>(x*v.x + y*v.y);
 }

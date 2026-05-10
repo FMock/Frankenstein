@@ -33,10 +33,10 @@ void AnimatedSprite::update(float deltaTime)
 {
 	x += change_x * deltaTime;
 	y += change_y * deltaTime;
-	position.setX(x);
-	box.setX(abs(x));
-	position.setY(y);
-	box.setY(abs(y));
+   position.setX(x);
+   box.setX(static_cast<int>(abs(x)));
+   position.setY(y);
+   box.setY(static_cast<int>(abs(y)));
 	animationDef.update(deltaTime);
 	notifyObservers();
 }
@@ -46,8 +46,8 @@ void AnimatedSprite::draw()
 {
 	GlDrawFrameParams params;
 	params.tex = animationDef.animations.at(animationDef.getCurrentAnimation()).m_image;
-	params.x = int(x);
-	params.y = int(y);
+   params.x = static_cast<int>(x);
+   params.y = static_cast<int>(y);
 	params.w = animationDef.getFrameWidth();
 	params.h = animationDef.getFrameHeight();
 	params.s1 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_s1;
