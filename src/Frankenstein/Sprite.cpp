@@ -18,15 +18,15 @@ float Sprite::getY()const{
 }
 
 void Sprite::setX(float newX){
-	position.setX(newX);
-	x = newX;
-	box.setX(abs(x));
+   position.setX(newX);
+   x = newX;
+   box.setX(static_cast<int>(abs(x)));
 }
 
 void Sprite::setY(float newY){
-	position.setY(newY);
-	y = newY;
-	box.setY(abs(y));
+   position.setY(newY);
+   y = newY;
+   box.setY(static_cast<int>(abs(y)));
 }
 
 AABB& Sprite::getBox(){

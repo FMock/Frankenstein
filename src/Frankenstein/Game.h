@@ -1,9 +1,15 @@
 #pragma once
-#include<SDL.h>
-#include<string>
+
+#include <SDL.h>
+#include <string>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 #include "Common.h"
+#include "Player.h"
+#include "StoreClerk.h"
+#include "Skeleton.h"
+#include "TextString.h"
 
 const int NUMBER_OF_SKELETONS = 1;
 
@@ -23,7 +29,7 @@ private:
 	void LoadData();
 	void UnloadData();
 
-	class TextString* m_textStr;
+    std::unique_ptr<class TextString> m_textStr;
 
 	// The previous frame's keyboard state.
 	unsigned char m_kbPrevState[SDL_NUM_SCANCODES] = { 0 };
@@ -47,7 +53,7 @@ private:
 
 
 	// Game Objects Specific to TestApp
-	class Player* m_player;
-	class StoreClerk* m_storeClerk;
-	std::vector<class Skeleton*> m_skeletons;
+    std::unique_ptr<Player> m_player;
+	std::unique_ptr<StoreClerk> m_storeClerk;
+	std::vector<std::unique_ptr<Skeleton>> m_skeletons;
 };

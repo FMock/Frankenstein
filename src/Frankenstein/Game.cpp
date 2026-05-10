@@ -1,12 +1,13 @@
-#include"Game.h"
-#include<GL/glew.h>
-#include<time.h>
-#include"Player.h"
-#include"StoreClerk.h"
-#include"Skeleton.h"
-#include"TextString.h"
-#include"TextStringParams.h"
-#include"DrawUtils.h"
+#include "Game.h"
+#include <GL/glew.h>
+#include <time.h>
+#include <memory>
+#include "Player.h"
+#include "StoreClerk.h"
+#include "Skeleton.h"
+#include "TextString.h"
+#include "TextStringParams.h"
+#include "DrawUtils.h"
 
 Game::Game()
 {
@@ -69,7 +70,7 @@ bool Game::Initialize()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	srand(time(NULL));
+   srand(static_cast<unsigned int>(time(NULL)));
 
 	// Load the game characters and other graphics
 	LoadData();
@@ -189,8 +190,8 @@ void Game::UpdateGame()
 {
 	// Compute deltaTime - the time difference between each frame
 	m_currentTime = SDL_GetTicks();
-	m_msPerFrame = m_currentTime - m_previousTime; // ~14 ms
-	m_deltaTime = (m_msPerFrame) / 1000.0f; // ~ 0.014
+   m_msPerFrame = static_cast<float>(m_currentTime - m_previousTime); // ~14 ms
+   m_deltaTime = m_msPerFrame / 1000.0f; // ~ 0.014
 	m_previousTime = m_currentTime;
 
 	// Calculate FPS and print
@@ -205,13 +206,12 @@ void Game::UpdateGame()
 
 	m_fps++; // increment frame counter each iteration
 
-	m_player->update(m_deltaTime);
+   m_player->update(m_deltaTime);
 
-
-	for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
-	{
-		m_skeletons.at(i)->update(m_deltaTime);
-	}
+   for (auto& skeleton : m_skeletons)
+   {
+	   skeleton->update(m_deltaTime);
+   }
 
 	// TODO FREE MEMORY OF ANY DEAD SPRITES
 
@@ -224,16 +224,17 @@ void Game::GenerateOutput()
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT); // Be sure to always draw objects after this
 
-	m_player->draw();
 
-	for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
-	{
-		m_skeletons.at(i)->draw();
-	}
+   m_player->draw();
 
-	m_storeClerk->draw();
+   for (auto& skeleton : m_skeletons)
+   {
+	   skeleton->draw();
+   }
 
-	m_textStr->drawText();
+   m_storeClerk->draw();
+
+   m_textStr->drawText();
 
 	SDL_GL_SwapWindow(m_window);
 }
@@ -241,38 +242,39 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	// Create player
-	m_player = new Player(300.0, 64.0, 64, 104, "player", this); //xPos, yPos, player_width, player_height
-	m_storeClerk = new StoreClerk(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), 650, 300, 44, 57); // TODO READ INIT PARAMS FROM CONFIG FILE
-	m_player->registerObserver(m_storeClerk);
+   m_player = std::make_unique<Player>(static_cast<float>(300.0), static_cast<float>(64.0), static_cast<int>(64), static_cast<int>(104), "player", this); //xPos, yPos, player_width, player_height
+   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile("../../images/magikarp.tga"), static_cast<int>(650), static_cast<int>(300), static_cast<int>(44), static_cast<int>(57)); // TODO READ INIT PARAMS FROM CONFIG FILE
+   m_player->registerObserver(m_storeClerk.get());
 
-	// Skeleton Creation
-	for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
-	{
-		float xpos = float(rand() % 150 + 50);
-		float ypos = float(rand() % 400 + 50);
-		m_skeletons.push_back(new Skeleton(xpos, ypos, 27, 48, "skeleton")); // TODO READ INIT PARAMS FROM CONFIG FILE
-		m_skeletons.at(i)->number = i + 1;
-		m_player->registerObserver(m_skeletons.at(i)); // register the skeleton as an observer of the player
-	}
+   // Skeleton Creation
+   for (int i = 0; i < NUMBER_OF_SKELETONS; i++)
+   {
+	   float xpos = float(rand() % 150 + 50);
+	   float ypos = float(rand() % 400 + 50);
+      auto skeleton = std::make_unique<Skeleton>(static_cast<float>(xpos), static_cast<float>(ypos), static_cast<int>(27), static_cast<int>(48), "skeleton"); // TODO READ INIT PARAMS FROM CONFIG FILE
+	   skeleton->number = i + 1;
+	   m_player->registerObserver(skeleton.get()); // register the skeleton as an observer of the player
+	   m_skeletons.push_back(std::move(skeleton));
+   }
 
-	// Initialize a TextString to drawing
-	m_textStr = new TextString(this);
-	TextStringInitParams params;
-	params.image = DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"); // TODO READ INIT PARAMS FROM CONFIG FILE
-	params.imageWidth = 496;
-	params.imageHeight = 216;
-	params.frameWidth = 31;
-	params.frameHeight = 36;
-	params.x = 150;
-	params.y = 150;
-	m_textStr->Initialize("Frankenstein!", params);
+   // Initialize a TextString to drawing
+   m_textStr = std::make_unique<TextString>(this);
+   TextStringInitParams params;
+   params.image = DrawUtilities::glTexImageTGAFile("../../images/game_font.tga"); // TODO READ INIT PARAMS FROM CONFIG FILE
+   params.imageWidth = 496;
+   params.imageHeight = 216;
+   params.frameWidth = 31;
+   params.frameHeight = 36;
+   params.x = 150;
+   params.y = 150;
+   m_textStr->Initialize("Frankenstein!", params);
 }
 
 void Game::UnloadData()
 {
-	delete m_player;
-	delete m_storeClerk;
-
-	for (auto skeleton : m_skeletons) { delete skeleton; }
+   m_player.reset();
+   m_storeClerk.reset();
+   m_skeletons.clear();
+   m_textStr.reset();
 }
 
