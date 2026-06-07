@@ -54,4 +54,9 @@ namespace DrawUtilities
 
 	FRANKENSTEIN_API void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle);
 
+	/* Draws a dim reference grid over the world rectangle (0,0)-(worldW,worldH)
+	 * with lines every `cell` pixels. Intended as a world-space background so
+	 * camera scrolling is visible; draw it before the sprites. */
+	FRANKENSTEIN_API void drawGrid(int worldWidth, int worldHeight, int cell);
+
 }

@@ -1,11 +1,12 @@
 #include"Orc.h"
+#include"TextureManager.h"
 
 using namespace DrawUtilities;
 
 // Required to make a default constructor to avoid compile error C2512
 
 Orc::Orc() : Observer(), Sprite(){
-	image = glTexImageTGAFile("../../images/ord_small_60w_75h.tga");
+	image = TextureManager::instance().load("../../images/ord_small_60w_75h.tga");
 }
 
 Orc::Orc(GLuint i, float xPos, float yPos, int w, int h) : Observer(), image(i), Sprite(xPos, yPos, w, h){}

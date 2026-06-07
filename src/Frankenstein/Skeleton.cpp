@@ -1,5 +1,6 @@
 #include"Skeleton.h"
 #include "Game.h"
+#include "TextureManager.h"
 
 using namespace DrawUtilities;
 
@@ -29,17 +30,19 @@ void Skeleton::respondToObserved(AnimatedSprite* a){
 void Skeleton::SetupAnimation()
 {
 	m_animationMapSkeleton["walking_left"] = 0;
-	m_skeletonWalkLeft = Animation(glTexImageTGAFile("../../images/skeleton_walking_left.tga"), 3, 1, 0, "walking_left", m_animationMapSkeleton["walking_left"]);
+	m_skeletonWalkLeft = Animation(TextureManager::instance().load("../../images/skeleton_walking_left.tga"), 3, 1, 0, "walking_left", m_animationMapSkeleton["walking_left"]);
 	m_skeletonAnimations.push_back(m_skeletonWalkLeft);
 	m_animationMapSkeleton["walking_right"] = 1;
-	m_skeletonWalkRight = Animation(glTexImageTGAFile("../../images/skeleton_walking_right.tga"), 3, 1, 0, "walking_right", m_animationMapSkeleton["walking_right"]);
+	m_skeletonWalkRight = Animation(TextureManager::instance().load("../../images/skeleton_walking_right.tga"), 3, 1, 0, "walking_right", m_animationMapSkeleton["walking_right"]);
 	m_skeletonAnimations.push_back(m_skeletonWalkRight);
 	m_animDefSkeleton = AnimationDef(1, 27, 48, m_skeletonAnimations, m_animationMapSkeleton);
 	SetAnimationDef(m_animDefSkeleton);
 }
 
 void Skeleton::update(float dt){
-	if(x > 800) // TODO REMOVE MAGIC NUMBER 800, USE GAME WORLD CONSTANT
+	// Patrol back and forth, turning around at the world edges.
+	float rightBound = (m_game ? static_cast<float>(m_game->getWorldWidth()) : 800.0f) - width;
+	if(x > rightBound)
 	{
 		changeAnimation(animationDef.animationMap["walking_left"]);
 		change_x = 0;

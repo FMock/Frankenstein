@@ -18,6 +18,8 @@ public:
 	float getY()const;
 	void setX(float);
 	void setY(float);
+	int getWidth()const;
+	int getHeight()const;
 	AABB box;
 	AABB& getBox();
 	bool AABBIntersect(AABB& box2)const;

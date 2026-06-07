@@ -4,6 +4,10 @@
     <Height>600</Height>
     <Title>Frankenstein Test App</Title>
   </Window>
+  <World>
+    <Width>2400</Width>
+    <Height>1200</Height>
+  </World>
   <Player>
     <X>300</X>
     <Y>64</Y>

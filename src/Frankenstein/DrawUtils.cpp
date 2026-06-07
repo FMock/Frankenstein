@@ -218,6 +218,30 @@ void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char 
 	}
 }
 
+// Draws a dim world-space reference grid so camera scrolling is visible.
+void DrawUtilities::drawGrid(int worldWidth, int worldHeight, int cell)
+{
+	if (cell <= 0)
+		return;
+
+	glDisable(GL_TEXTURE_2D);
+	glColor3ub(40, 40, 40);
+	glBegin(GL_LINES);
+	for (int x = 0; x <= worldWidth; x += cell)
+	{
+		glVertex2i(x, 0);
+		glVertex2i(x, worldHeight);
+	}
+	for (int y = 0; y <= worldHeight; y += cell)
+	{
+		glVertex2i(0, y);
+		glVertex2i(worldWidth, y);
+	}
+	glEnd();
+	glColor3ub(255, 255, 255); // restore default so textured draws aren't tinted
+	glEnable(GL_TEXTURE_2D);
+}
+
 // Draw the sprite rotated by the number of degrees specified by the angle parameter
 void DrawUtilities::glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle)
 {
