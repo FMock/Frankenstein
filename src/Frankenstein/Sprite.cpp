@@ -29,6 +29,14 @@ void Sprite::setY(float newY){
    box.setY(static_cast<int>(y));
 }
 
+int Sprite::getWidth()const{
+	return width;
+}
+
+int Sprite::getHeight()const{
+	return height;
+}
+
 AABB& Sprite::getBox(){
 	return box;
 }

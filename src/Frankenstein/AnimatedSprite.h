@@ -51,5 +51,5 @@ protected:
 	std::vector<Observer*> myObservers;
 	std::map<std::string, int> m_animationMap;
 	void SetAnimationDef(AnimationDef&);
-	class Game* m_game;
+	class Game* m_game = nullptr;
 };

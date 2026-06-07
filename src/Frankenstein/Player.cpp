@@ -1,9 +1,11 @@
 #include <iostream>
+#include <stdexcept>
 #include"Player.h"
 #include "Game.h"
 #include "SpriteSheetInfo.h"
 #include "AnimationParameters.h"
 #include "Utilities.h"
+#include "TextureManager.h"
 
 using namespace DrawUtilities;
 using namespace Frankenstein::Utility;
@@ -41,24 +43,21 @@ void Player::SetupAnimation()
 
 	if (!Utilities::ReadXmlFile(R"(../../config/PlayerSpriteSheetInfoParams.xml)", spriteSheetParams))
 	{
-		std::cout << "There was a problem reading PlayerSpriteSheetInfoParams.xml" << std::endl;
-		exit(1);
+		throw std::runtime_error("Could not read ../../config/PlayerSpriteSheetInfoParams.xml");
 	}
 	std::string spriteSheetParamFile = "../../images/" + spriteSheetParams.m_fileName; // dwarf.tga
-	GLuint texture = glTexImageTGAFile(spriteSheetParamFile.c_str());
+	GLuint texture = TextureManager::instance().load(spriteSheetParamFile);
 
 	auto animationParamVect = std::vector< AnimationParameters>();
 	if (!Utilities::ReadCsvFile(R"(../../config/PlayerAnimationParams.csv)", animationParamVect))
 	{
-		std::cout << "There was a problem reading PlayerAnimationParams.csv" << std::endl;
-		exit(1);
+		throw std::runtime_error("Could not read ../../config/PlayerAnimationParams.csv");
 	}
 
 	// Load up all player animations (one per row parsed from the CSV)
 	if (animationParamVect.empty())
 	{
-		std::cout << "PlayerAnimationParams.csv contained no animation rows" << std::endl;
-		exit(1);
+		throw std::runtime_error("PlayerAnimationParams.csv contained no animation rows");
 	}
 	int count = static_cast<int>(animationParamVect.size());
 	for (int i = 0; i < count; i++)
@@ -78,18 +77,15 @@ void Player::SetupAnimation()
 
 void Player::update(float dt)
 {
-	if (x > 800) // TODO REMOVE MAGIC NUMBER 800, USE GAME WORLD CONSTANT
-	{ 
-		changeAnimation(animationDef.animationMap["walking_left"]);
-		change_x = 0;
-		moveLeft();
-	}
-	else if (x < 0)
-	{
-		changeAnimation(animationDef.animationMap["walking_right"]);
-		change_x = 0;
-		moveRight();
-	}
-
 	AnimatedSprite::update(dt);
+
+	// Stop at the world edges (the camera scrolls to follow; no bounce-back).
+	float maxX = (m_game ? static_cast<float>(m_game->getWorldWidth()) : 800.0f) - width;
+	float maxY = (m_game ? static_cast<float>(m_game->getWorldHeight()) : 600.0f) - height;
+	if (x < 0)    { x = 0.0f;  change_x = 0; }
+	if (x > maxX) { x = maxX;  change_x = 0; }
+	if (y < 0)    { y = 0.0f;  change_y = 0; }
+	if (y > maxY) { y = maxY;  change_y = 0; }
+	setX(x);
+	setY(y);
 }

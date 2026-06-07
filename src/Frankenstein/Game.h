@@ -12,6 +12,7 @@
 #include "Skeleton.h"
 #include "TextString.h"
 #include "XmlSettings.h"
+#include "Camera.h"
 
 const int NUMBER_OF_SKELETONS = 1;
 
@@ -22,6 +23,11 @@ public:
 	bool Initialize();
 	void RunLoop();
 	void Shutdown();
+
+	// World bounds (in pixels) entities clamp/patrol against. Set from the
+	// <World> section of Game-Settings.xml, defaulting to the window size.
+	int getWorldWidth() const { return m_worldWidth; }
+	int getWorldHeight() const { return m_worldHeight; }
 private:
 	SDL_Window* m_window = nullptr;
 	SDL_GLContext m_glcontext = nullptr;
@@ -60,4 +66,9 @@ private:
 	std::vector<std::unique_ptr<Skeleton>> m_skeletons;
 
 	XmlSettings m_settings;
+
+	// Camera/viewport that scrolls the world and follows the player.
+	Camera m_camera;
+	int m_worldWidth = 0;
+	int m_worldHeight = 0;
 };

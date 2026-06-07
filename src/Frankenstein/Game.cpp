@@ -9,7 +9,9 @@
 #include "TextStringParams.h"
 #include "DrawUtils.h"
 #include "XmlSettings.h"
+#include "TextureManager.h"
 #include <direct.h>
+#include <stdexcept>
 
 Game::Game()
 {
@@ -80,6 +82,19 @@ bool Game::Initialize()
 		return false;
 	}
 
+	// Enable vsync so the loop is paced to the display instead of spinning at
+	// 100% CPU. A -1 return just means the platform doesn't support it.
+	SDL_GL_SetSwapInterval(1);
+
+	// World bounds + camera. The world may be larger than the window; default to
+	// the window size when <World> is absent (or smaller than the viewport).
+	m_worldWidth = m_settings.GetInt("World", "Width");
+	m_worldHeight = m_settings.GetInt("World", "Height");
+	if (m_worldWidth < winWidth)  m_worldWidth = winWidth;
+	if (m_worldHeight < winHeight) m_worldHeight = winHeight;
+	m_camera.setViewport(winWidth, winHeight);
+	m_camera.setWorldSize(static_cast<float>(m_worldWidth), static_cast<float>(m_worldHeight));
+
 	// Setup OpenGL state.
    glViewport(0, 0, winWidth, winHeight);
    glMatrixMode(GL_PROJECTION);
@@ -114,6 +129,8 @@ void Game::Shutdown()
 	// initialized Game (Shutdown is called even when Initialize() failed).
 	if (m_glcontext)
 	{
+		// Free all GL textures while the context is still current (fixes the leak).
+		TextureManager::instance().clear();
 		// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
 		SDL_GL_DeleteContext(m_glcontext);
 		m_glcontext = nullptr;
@@ -243,6 +260,10 @@ void Game::UpdateGame()
 	   skeleton->update(m_deltaTime);
    }
 
+   // Camera follows the player (centered, clamped to the world bounds).
+   m_camera.centerOn(m_player->getX() + m_player->getWidth() / 2.0f,
+					  m_player->getY() + m_player->getHeight() / 2.0f);
+
 	// TODO FREE MEMORY OF ANY DEAD SPRITES
 
 	//fmod_sys->update(); // If you don't update the sound will play once
@@ -254,6 +275,12 @@ void Game::GenerateOutput()
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT); // Be sure to always draw objects after this
 
+	// World space: apply the camera transform, then draw the scrolling world.
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	m_camera.apply();
+
+	DrawUtilities::drawGrid(m_worldWidth, m_worldHeight, 64);
 
    m_player->draw();
 
@@ -264,6 +291,9 @@ void Game::GenerateOutput()
 
    m_storeClerk->draw();
 
+	// Screen space (HUD): reset the modelview so the title stays fixed on screen
+	// instead of scrolling with the world.
+	glLoadIdentity();
    m_textStr->drawText();
 
 	SDL_GL_SwapWindow(m_window);
@@ -281,7 +311,12 @@ bool Game::LoadData()
 	  fprintf(stderr, "Missing required player settings in XML.\n");
 	  return false;
    }
-   m_player = std::make_unique<Player>(playerX, playerY, playerW, playerH, playerName, this);
+   try {
+	  m_player = std::make_unique<Player>(playerX, playerY, playerW, playerH, playerName, this);
+   } catch (const std::exception& e) {
+	  fprintf(stderr, "Failed to load player: %s\n", e.what());
+	  return false;
+   }
 
    // StoreClerk
    std::string clerkImg = m_settings.GetString("StoreClerk", "Image");
@@ -293,7 +328,7 @@ bool Game::LoadData()
 	  fprintf(stderr, "Missing required store clerk settings in XML.\n");
 	  return false;
    }
-   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile(clerkImg.c_str()), static_cast<float>(clerkX), static_cast<float>(clerkY), clerkW, clerkH);
+   m_storeClerk = std::make_unique<StoreClerk>(TextureManager::instance().load(clerkImg), static_cast<float>(clerkX), static_cast<float>(clerkY), clerkW, clerkH);
    m_player->registerObserver(m_storeClerk.get());
 
    // Skeletons
@@ -312,7 +347,7 @@ bool Game::LoadData()
    for (int i = 0; i < skeletonCount; i++) {
 	  float xpos = static_cast<float>(rand() % (skeletonXMax - skeletonXMin + 1) + skeletonXMin);
 	  float ypos = static_cast<float>(rand() % (skeletonYMax - skeletonYMin + 1) + skeletonYMin);
-	  auto skeleton = std::make_unique<Skeleton>(xpos, ypos, skeletonW, skeletonH, skeletonName);
+	  auto skeleton = std::make_unique<Skeleton>(xpos, ypos, skeletonW, skeletonH, skeletonName, this);
 	  skeleton->number = i + 1;
 	  m_player->registerObserver(skeleton.get());
 	  m_skeletons.push_back(std::move(skeleton));
@@ -326,7 +361,7 @@ bool Game::LoadData()
 	  fprintf(stderr, "Missing required font image setting in XML.\n");
 	  return false;
    }
-   params.image = DrawUtilities::glTexImageTGAFile(fontImg.c_str());
+   params.image = TextureManager::instance().load(fontImg);
    params.imageWidth = m_settings.GetInt("Font", "ImageWidth");
    params.imageHeight = m_settings.GetInt("Font", "ImageHeight");
    params.frameWidth = m_settings.GetInt("Font", "FrameWidth");

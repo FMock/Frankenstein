@@ -144,6 +144,7 @@
     <ClInclude Include="animation.h" />
     <ClInclude Include="AnimationDef.h" />
     <ClInclude Include="AnimationParameters.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="DrawUtils.h" />
     <ClInclude Include="FrankensteinAPI.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="SpriteSheetInfo.h" />
     <ClInclude Include="StoreClerk.h" />
     <ClInclude Include="TextString.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TextStringParams.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vector2D.h" />
@@ -165,6 +167,7 @@
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="AnimationDef.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawUtils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Observer.cpp" />
@@ -174,6 +177,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StoreClerk.cpp" />
     <ClCompile Include="TextString.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Vector2D.cpp" />
     <ClCompile Include="XmlSettings.cpp" />
