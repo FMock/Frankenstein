@@ -84,7 +84,7 @@ float Vector2D::magnitude() const{
 void Vector2D::normalize(){
 	float lengthSq = x*x + y*y;
 	if(lengthSq > 0){
-		float oneOverLength = 1.0f / sqrt(lengthSq);
+		float oneOverLength = 1.0f / sqrtf(lengthSq);
 		x *= oneOverLength;
 		y *= oneOverLength;
 	}

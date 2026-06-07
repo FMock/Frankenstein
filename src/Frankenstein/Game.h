@@ -23,12 +23,12 @@ public:
 	void RunLoop();
 	void Shutdown();
 private:
-	SDL_Window* m_window;
-	SDL_GLContext m_glcontext;
+	SDL_Window* m_window = nullptr;
+	SDL_GLContext m_glcontext = nullptr;
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
-	void LoadData();
+	bool LoadData();
 	void UnloadData();
 
     std::unique_ptr<class TextString> m_textStr;

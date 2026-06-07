@@ -1,6 +1,7 @@
 #include"AnimatedSprite.h"
 #include"animation.h"
 #include"Game.h"
+#include<algorithm>
 
 using namespace DrawUtilities;
 
@@ -34,9 +35,9 @@ void AnimatedSprite::update(float deltaTime)
 	x += change_x * deltaTime;
 	y += change_y * deltaTime;
    position.setX(x);
-   box.setX(static_cast<int>(abs(x)));
+   box.setX(static_cast<int>(x));
    position.setY(y);
-   box.setY(static_cast<int>(abs(y)));
+   box.setY(static_cast<int>(y));
 	animationDef.update(deltaTime);
 	notifyObservers();
 }
@@ -44,16 +45,20 @@ void AnimatedSprite::update(float deltaTime)
 /* Draw this AnimatedSprite to the screen */
 void AnimatedSprite::draw()
 {
+	// Look up the currently-playing animation once (bounds-checked) instead of
+	// fetching it separately for every texture coordinate.
+	const Animation& anim = animationDef.animations.at(animationDef.getCurrentAnimation());
+
 	GlDrawFrameParams params;
-	params.tex = animationDef.animations.at(animationDef.getCurrentAnimation()).m_image;
+	params.tex = anim.m_image;
    params.x = static_cast<int>(x);
    params.y = static_cast<int>(y);
 	params.w = animationDef.getFrameWidth();
 	params.h = animationDef.getFrameHeight();
-	params.s1 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_s1;
-	params.s2 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_s2;
-	params.t1 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_t1;
-	params.t2 = animationDef.animations.at(animationDef.getCurrentAnimation()).m_t2;
+	params.s1 = anim.m_s1;
+	params.s2 = anim.m_s2;
+	params.t1 = anim.m_t1;
+	params.t2 = anim.m_t2;
 
 	glDrawFrame(params);
 }
@@ -106,9 +111,9 @@ int AnimatedSprite::getCurrentAnimation()const
 
 // Notify all observers of this sprites info
 void AnimatedSprite::notifyObservers(){
-	for(unsigned int i = 0; i < myObservers.size(); i++)
+	for (Observer* observer : myObservers)
 	{
-		myObservers.at(i)->notify(this);
+		observer->notify(this);
 	}
 }
 
@@ -121,12 +126,9 @@ void AnimatedSprite::registerObserver(Observer *observer)
 // Remove an observer from this sprites list of observers
 void AnimatedSprite::unregisterObserver(Observer *observer)
 {
-	for(unsigned int i = 0; i < myObservers.size(); i++){
-		if(myObservers.at(i)==observer){
-			myObservers.erase(myObservers.begin()+i);
-			return;
-		}
-	}
+	auto it = std::find(myObservers.begin(), myObservers.end(), observer);
+	if (it != myObservers.end())
+		myObservers.erase(it);
 }
 
 int AnimatedSprite::getFacingDirection()const

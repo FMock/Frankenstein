@@ -49,8 +49,22 @@ GLuint DrawUtilities::glTexImageTGAFile(const char* filename)
 	fread(&bitCount, sizeof(unsigned char), 1, file);
 	fseek(file, 1, SEEK_CUR);
 
+	/* sanity-check dimensions before allocating */
+	if (imageWidth <= 0 || imageHeight <= 0)
+	{
+		fclose(file);
+		fprintf(stderr, "File: %s -- Invalid TGA dimensions: %dx%d\n", filename, imageWidth, imageHeight);
+		return 0;
+	}
+
 	/* allocate memory for image data and read it in */
 	unsigned char* bytes = (unsigned char*)calloc(imageWidth * imageHeight * BPP, 1);
+	if (bytes == NULL)
+	{
+		fclose(file);
+		fprintf(stderr, "File: %s -- Could not allocate %d bytes for image data.\n", filename, imageWidth * imageHeight * BPP);
+		return 0;
+	}
 
 	/* read in data */
 	if (bitCount == 32)
@@ -166,6 +180,12 @@ void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char 
 	int numberOfRows = 0; //-----------------define just to get it to compile, fix later
 	int currentRow = 0; //-----------------define just to get it to compile, fix later
 
+	// NOTE: This helper is still a stub (the font metrics above are placeholders);
+	// the working font-drawing path is TextString::drawText. Guard against the
+	// divide-by-zero that the zero-initialized numberOfFrames would otherwise cause.
+	if (numberOfFrames <= 0)
+		return;
+
 	for (int i = 0; i < strlen(string); i++)
 	{
 		int frame = string[i] - 32; //the current frame or letter to draw
@@ -201,13 +221,17 @@ void DrawUtilities::drawRasterText(GLuint tex, int x, int y, int w, int h, char 
 // Draw the sprite rotated by the number of degrees specified by the angle parameter
 void DrawUtilities::glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle)
 {
+	// Rotate the sprite about its own center by `angle` degrees on the modelview
+	// matrix, then restore the previous transform.
+	const float cx = x + w / 2.0f;
+	const float cy = y + h / 2.0f;
 
-	glMatrixMode(GL_TEXTURE); // make the texture matrix the target of matrix function calls
-
-	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
-	glRotatef(90.0, 0.0f, 0.0f, 1.0f);
+	glTranslatef(cx, cy, 0.0f);
+	glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-cx, -cy, 0.0f);
 
 	glDrawSprite(tex, x, y, w, h);
 
