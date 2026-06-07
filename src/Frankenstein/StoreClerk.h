@@ -6,8 +6,9 @@
 #include"Sprite.h"
 #include"Observer.h"
 #include"AnimatedSprite.h"
+#include"FrankensteinAPI.h"
 
-class StoreClerk : public Observer, public Sprite{
+class FRANKENSTEIN_API StoreClerk : public Observer, public Sprite{
 public:
 	StoreClerk();
 	StoreClerk(GLuint, float, float, int, int);

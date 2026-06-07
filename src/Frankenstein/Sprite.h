@@ -4,9 +4,10 @@
 #include"AABB.h"
 #include"Vector2D.h"
 #include<cmath>
+#include"FrankensteinAPI.h"
 
 
-class Sprite{
+class FRANKENSTEIN_API Sprite{
 public:
 	Sprite(void);
 	Sprite(float, float, int, int);

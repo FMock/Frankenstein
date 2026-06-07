@@ -3,10 +3,11 @@
 
 #include"Observer.h"
 #include"AnimatedSprite.h"
+#include"FrankensteinAPI.h"
 
 using SkeletonAnimations = std::vector<Animation>;
 
-class Skeleton : public Observer, public AnimatedSprite{
+class FRANKENSTEIN_API Skeleton : public Observer, public AnimatedSprite{
 public:
 	inline Skeleton(){}
 	Skeleton(float, float, int, int, const std::string&);

@@ -1,7 +1,7 @@
 #include"Vector2D.h"
 
 Vector2D::Vector2D(){};
-Vector2D::Vector2D(float xPos = 0, float yPos = 0) : x(xPos), y(yPos){}
+Vector2D::Vector2D(float xPos, float yPos) : x(xPos), y(yPos){}
 
 // Overload equality operator
 // Returns true if both vectors contain same x and y, false otherwise

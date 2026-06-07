@@ -5,6 +5,7 @@
 #include<GL/glew.h>
 #include"DrawUtils.h"
 #include"Observer.h"
+#include"FrankensteinAPI.h"
 #include<sstream>
 
 /* AnimatedSprite.h
@@ -15,7 +16,7 @@
  * receive information about this object and interact accordingly.
  * */
 
-class AnimatedSprite : public Sprite{
+class FRANKENSTEIN_API AnimatedSprite : public Sprite{
 public:
 	AnimatedSprite();
 	AnimatedSprite(float, float, int, int, const std::string&);

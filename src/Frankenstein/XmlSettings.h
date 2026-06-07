@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include "FrankensteinAPI.h"
 
 /* XmlSettings
  * Minimal reader/writer for a flat two-level XML settings file of the form:
@@ -13,7 +14,7 @@
  *   </Settings>
  * No attributes, no nested elements inside a key, no namespaces.
  */
-class XmlSettings {
+class FRANKENSTEIN_API XmlSettings {
 public:
     bool Load(const std::string& filename);
     bool Save(const std::string& filename) const;

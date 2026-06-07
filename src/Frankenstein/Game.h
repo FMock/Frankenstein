@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include "FrankensteinAPI.h"
 #include "Common.h"
 #include "Player.h"
 #include "StoreClerk.h"
@@ -14,7 +15,7 @@
 
 const int NUMBER_OF_SKELETONS = 1;
 
-class Game
+class FRANKENSTEIN_API Game
 {
 public:
 	Game();

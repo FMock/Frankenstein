@@ -3,12 +3,13 @@
 #include<GL/glew.h>
 #include<vector>
 #include"AnimatedSprite.h"
+#include"FrankensteinAPI.h"
 #include<string>
 #include<sstream>
 
 using PlayerAnimations = std::vector<Animation>;
 
-class Player : public AnimatedSprite{
+class FRANKENSTEIN_API Player : public AnimatedSprite{
 public:
 	Player();
 	Player(float, float, int, int, const std::string&);
