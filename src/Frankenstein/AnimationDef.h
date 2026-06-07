@@ -5,8 +5,9 @@
 #include<vector>
 #include<map>
 #include<string>
+#include"FrankensteinAPI.h"
 
-class AnimationDef{
+class FRANKENSTEIN_API AnimationDef{
 public:
 	AnimationDef();
 

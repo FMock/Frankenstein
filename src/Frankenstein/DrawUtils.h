@@ -2,6 +2,7 @@
 
 #include<GL/glew.h>
 #include<string>
+#include"FrankensteinAPI.h"
 
 struct GlDrawFrameParams
 {
@@ -18,11 +19,11 @@ struct GlDrawFrameParams
 
 namespace DrawUtilities
 {
-	GLuint glTexImageTGAFile(const char* filename);
+	FRANKENSTEIN_API GLuint glTexImageTGAFile(const char* filename);
 
 	/* Uses default values for s and t texture coordinates since it assumes
 		* the full texture will be drawn*/
-	void glDrawSprite(GLuint tex, int x, int y, int w, int h);
+	FRANKENSTEIN_API void glDrawSprite(GLuint tex, int x, int y, int w, int h);
 
 	/// <summary>
 	/// Draws a single frame of a GL texture
@@ -46,11 +47,11 @@ namespace DrawUtilities
 	/// (s1,t1)******(s2,t1)
 	/// 
 	/// </param>
-	void glDrawFrame(GlDrawFrameParams params);
+	FRANKENSTEIN_API void glDrawFrame(GlDrawFrameParams params);
 
 	/*Draws each character image of string*/
-	void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]);
+	FRANKENSTEIN_API void drawRasterText(GLuint tex, int x, int y, int w, int h, char string[]);
 
-	void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle);
+	FRANKENSTEIN_API void glDrawSpriteRotate(GLuint tex, int x, int y, int w, int h, GLfloat angle);
 
 }

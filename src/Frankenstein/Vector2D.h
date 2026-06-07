@@ -1,8 +1,9 @@
 #pragma once
 
 #include<math.h>
+#include"FrankensteinAPI.h"
 
-class Vector2D{
+class FRANKENSTEIN_API Vector2D{
 private:
 	float x;
 	float y;

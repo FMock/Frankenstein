@@ -4,12 +4,13 @@
 #include<GL/glew.h>
 #include "SpriteSheetInfo.h"
 #include "AnimationParameters.h"
+#include "FrankensteinAPI.h"
 
 /* Animation.h
  * Encapsulates a single animation and it's intrinsic properties.
  */
 
-class Animation{
+class FRANKENSTEIN_API Animation{
 public:
 	Animation() = default;
 

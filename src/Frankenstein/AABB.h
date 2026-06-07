@@ -1,7 +1,8 @@
 #pragma once
 
+#include"FrankensteinAPI.h"
 
-struct AABB{
+struct FRANKENSTEIN_API AABB{
 	inline AABB(){}
 	inline AABB(int x, int y, int w, int h) : x(x), y(y), w(w), h(h){}
 	int x, y, w, h;

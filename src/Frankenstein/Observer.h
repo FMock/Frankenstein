@@ -1,9 +1,11 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
 
+#include"FrankensteinAPI.h"
+
 class AnimatedSprite;
 
-class Observer{
+class FRANKENSTEIN_API Observer{
 public:
 	inline Observer(void){}
 	template<typename T> void notify(T*);

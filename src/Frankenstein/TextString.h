@@ -7,8 +7,9 @@
 #include<string>
 #include<cmath>
 #include"TextStringParams.h"
+#include"FrankensteinAPI.h"
 
-class TextString{
+class FRANKENSTEIN_API TextString{
 public:
 	TextString();
 	TextString(class Game* game);
