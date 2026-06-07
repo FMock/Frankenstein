@@ -51,20 +51,23 @@ bool Game::Initialize()
 	if (!m_window)
 	{
 		fprintf(stderr, "Could not create window. ErrorCode=%s\n", SDL_GetError());
-		SDL_Quit();
 		return false;
 	}
 
 	// Create an OpenGL context associated with the window.
-	SDL_GLContext glcontext = SDL_GL_CreateContext(m_window);
+	m_glcontext = SDL_GL_CreateContext(m_window);
+	if (!m_glcontext)
+	{
+		fprintf(stderr, "Could not create OpenGL context. ErrorCode=%s\n", SDL_GetError());
+		return false;
+	}
 
 	// Make sure we have a recent version of OpenGL.
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK)
 	{
 		fprintf(stderr, "Could not initialize glew. ErrorCode=%s\n", glewGetErrorString(glewError));
-		SDL_Quit();
-		return 1;
+		return false;
 	}
 	if (GLEW_VERSION_2_0)
 	{
@@ -74,8 +77,7 @@ bool Game::Initialize()
 	else
 	{
 		fprintf(stderr, "OpenGL max supported version is too low.\n");
-		SDL_Quit();
-		return 1;
+		return false;
 	}
 
 	// Setup OpenGL state.
@@ -89,7 +91,8 @@ bool Game::Initialize()
    srand(static_cast<unsigned int>(time(NULL)));
 
 	// Load the game characters and other graphics
-	LoadData();
+	if (!LoadData())
+		return false;
 
 	return true;
 }
@@ -107,8 +110,19 @@ void Game::RunLoop()
 void Game::Shutdown()
 {
 	UnloadData();
-	// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
-	SDL_GL_DeleteContext(m_glcontext);
+	// Tear down in reverse order of creation, guarding against a partially
+	// initialized Game (Shutdown is called even when Initialize() failed).
+	if (m_glcontext)
+	{
+		// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
+		SDL_GL_DeleteContext(m_glcontext);
+		m_glcontext = nullptr;
+	}
+	if (m_window)
+	{
+		SDL_DestroyWindow(m_window);
+		m_window = nullptr;
+	}
 	SDL_Quit();
 }
 
@@ -255,7 +269,7 @@ void Game::GenerateOutput()
 	SDL_GL_SwapWindow(m_window);
 }
 
-void Game::LoadData()
+bool Game::LoadData()
 {
    // Player
    float playerX = static_cast<float>(m_settings.GetInt("Player", "X"));
@@ -265,7 +279,7 @@ void Game::LoadData()
    std::string playerName = m_settings.GetString("Player", "Name");
    if (playerW == 0 || playerH == 0 || playerName.empty()) {
 	  fprintf(stderr, "Missing required player settings in XML.\n");
-	  return;
+	  return false;
    }
    m_player = std::make_unique<Player>(playerX, playerY, playerW, playerH, playerName, this);
 
@@ -277,9 +291,9 @@ void Game::LoadData()
    int clerkH = m_settings.GetInt("StoreClerk", "Height");
    if (clerkImg.empty() || clerkW == 0 || clerkH == 0) {
 	  fprintf(stderr, "Missing required store clerk settings in XML.\n");
-	  return;
+	  return false;
    }
-   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile(clerkImg.c_str()), clerkX, clerkY, clerkW, clerkH);
+   m_storeClerk = std::make_unique<StoreClerk>(DrawUtilities::glTexImageTGAFile(clerkImg.c_str()), static_cast<float>(clerkX), static_cast<float>(clerkY), clerkW, clerkH);
    m_player->registerObserver(m_storeClerk.get());
 
    // Skeletons
@@ -293,7 +307,7 @@ void Game::LoadData()
    std::string skeletonName = m_settings.GetString("Skeleton", "Name");
    if (skeletonCount == 0 || skeletonW == 0 || skeletonH == 0 || skeletonName.empty()) {
 	  fprintf(stderr, "Missing required skeleton settings in XML.\n");
-	  return;
+	  return false;
    }
    for (int i = 0; i < skeletonCount; i++) {
 	  float xpos = static_cast<float>(rand() % (skeletonXMax - skeletonXMin + 1) + skeletonXMin);
@@ -310,7 +324,7 @@ void Game::LoadData()
    std::string fontImg = m_settings.GetString("Font", "Image");
    if (fontImg.empty()) {
 	  fprintf(stderr, "Missing required font image setting in XML.\n");
-	  return;
+	  return false;
    }
    params.image = DrawUtilities::glTexImageTGAFile(fontImg.c_str());
    params.imageWidth = m_settings.GetInt("Font", "ImageWidth");
@@ -322,9 +336,11 @@ void Game::LoadData()
    std::string fontText = m_settings.GetString("Font", "Text");
    if (params.imageWidth == 0 || params.imageHeight == 0 || params.frameWidth == 0 || params.frameHeight == 0 || fontText.empty()) {
 	  fprintf(stderr, "Missing required font settings in XML.\n");
-	  return;
+	  return false;
    }
    m_textStr->Initialize(fontText.c_str(), params);
+
+   return true;
 }
 
 void Game::UnloadData()

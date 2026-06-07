@@ -54,8 +54,13 @@ void Player::SetupAnimation()
 		exit(1);
 	}
 
-	// Load up all player animations
-	int count = animationParamVect[1].animationCount;
+	// Load up all player animations (one per row parsed from the CSV)
+	if (animationParamVect.empty())
+	{
+		std::cout << "PlayerAnimationParams.csv contained no animation rows" << std::endl;
+		exit(1);
+	}
+	int count = static_cast<int>(animationParamVect.size());
 	for (int i = 0; i < count; i++)
 	{
 		auto name = animationParamVect[i].animationName;

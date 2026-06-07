@@ -51,11 +51,6 @@ void Skeleton::update(float dt){
 		moveRight();
 	}
 
-   x += change_x * dt;
-   y += change_y * dt;
-   position.setX(x);
-   box.setX(static_cast<int>(abs(x)));
-   position.setY(y);
-   box.setY(static_cast<int>(abs(y)));
-	animationDef.update(dt);
+	// Shared position/box/animation advance (also fixes the abs() coordinate bug).
+	AnimatedSprite::update(dt);
 }
